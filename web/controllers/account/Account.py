@@ -10,7 +10,9 @@
 ------------------------------------
 @ModifyTime     :  
 """
-from flask import Blueprint, jsonify, redirect, request
+import json
+
+from flask import Blueprint, jsonify, make_response, redirect, request
 
 from application import app, db
 from common.libs.Helper import ops_render, iPagination, getCurrentDate
@@ -159,10 +161,14 @@ def set_page():
 
     # app.logger.info(user_info)
     db.session.add(model_user)  # 增加用户信息
-    app.logger.info(model_user)
+    # app.logger.info(model_user)
     db.session.commit()  # 统一提交
 
-    return jsonify(resp)
+    response = make_response(json.dumps(resp))
+    # # 设置了cookie，那么就能设置统一拦截器，防止客户端没有cookie而能进入后台，同时定义cookie的加密方式geneAuthCode
+    response.set_cookie(app.config['AUTH_COOKIE_NAME'], '%s#%s' % (UserService.geneAuthCode(model_user), model_user.uid),
+                        60 * 60 * 24 * 120)  # 生成cookie形式为 16进制加密字符#uid，保存120天
+    return response
 
 
 # 删除和恢复
