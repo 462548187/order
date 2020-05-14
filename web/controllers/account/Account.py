@@ -52,7 +52,7 @@ def index():
     offset = (page - 1) * app.config['PAGE_SIZE']  # 偏移量
     limit = page * app.config['PAGE_SIZE']  # 每页数量
 
-    user_list = query.order_by(User.uid.desc()).all()[offset: limit]  # 按照uid倒序排列，查询所有数据，计算分页
+    user_list = query.order_by(User.uid).all()[offset: limit]  # 按照uid正序排列，查询所有数据，计算分页
 
     resp_data['list'] = user_list
     resp_data['pages'] = pages
