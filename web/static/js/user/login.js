@@ -34,7 +34,7 @@ let user_login_ops = {
                     btn_target.removeClass("disabled");
 
                     let callback = null
-                    if (res.code === 200){
+                    if (res.code == 200){
                         callback = function () {
                             // common_ops.alert(common_ops.buildUrl("/"))
                             window.location.href = common_ops.buildUrl("/");

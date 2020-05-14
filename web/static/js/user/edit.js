@@ -42,8 +42,8 @@ let user_edit_ops = {
                 success: function (res) {
                     btn_target.removeClass("disabled");
 
-                    let callback = null
-                    if (res.code === 200){
+                    let callback = null;
+                    if (res.code == 200){
                         callback = function () {
                             window.location.reload();
                         }

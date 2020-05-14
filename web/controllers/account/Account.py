@@ -82,9 +82,8 @@ def info():
     return ops_render('/account/info.html', resp_data)
 
 
-@route_account.route('set', methods=['GET', 'POST'])
+@route_account.route('/set', methods=['GET', 'POST'])
 def set_page():
-
     default_pwd = '******'  # 定义个默认密码显示
 
     if request.method == 'GET':
@@ -164,3 +163,44 @@ def set_page():
     db.session.commit()  # 统一提交
 
     return jsonify(resp)
+
+
+# 删除和恢复
+@route_account.route('/ops', methods=['GET', 'POST'])
+def ops():
+    resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
+    req = request.values
+
+    id = req['id'] if 'id' in req else ''
+    act = req['act'] if 'act' in req else ''
+
+    if not id:
+        resq['code'] = -1
+        resq['msg'] = '请选择要操作的账号'
+        return jsonify(resq)
+
+    if act not in ['remove', 'recover']:
+        resq['code'] = -1
+        resq['msg'] = '操作有误，请重试'
+        return jsonify(resq)
+
+    # 查询用户信息是否存在
+    user_info = User.query.filter_by(uid=id).first()
+
+    if not user_info:
+        resq['code'] = -1
+        resq['msg'] = '指定账号不存在'
+        return jsonify(resq)
+
+    if act == 'remove':
+        user_info.status = 0
+    elif act == 'recover':
+        user_info.status = 1
+    else:
+        return False
+
+    user_info.update_time = getCurrentDate()  # 更新操作时间
+    db.session.add(user_info)
+    db.session.commit()
+
+    return jsonify(resq)

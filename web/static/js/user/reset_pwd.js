@@ -43,7 +43,7 @@ let mod_pwd_ops = {
                     btn_target.removeClass("disabled");
 
                     let callback = null
-                    if (res.code === 200){
+                    if (res.code == 200){
                         callback = function () {
                             window.location.reload();
                         }
