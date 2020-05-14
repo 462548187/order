@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from common.libs.Helper import getCurrentDateString
+
 
 class UrlManager(object):
     def __init__(self):
@@ -10,6 +12,6 @@ class UrlManager(object):
 
     @staticmethod
     def buildStaticUrl(path):
-        ver = "%s" % (2020051302033313324433344433334433111)
+        ver = "%s" % (getCurrentDateString())
         path = "/static" + path + "?ver=" + ver
         return UrlManager.buildUrl(path)

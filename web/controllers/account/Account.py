@@ -17,6 +17,7 @@ from common.libs.Helper import ops_render, iPagination, getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.libs.user.UserService import UserService
 from common.models.User import User
+from sqlalchemy import or_
 
 route_account = Blueprint('account_page', __name__)
 
@@ -29,6 +30,15 @@ def index():
     page = int(req['p']) if ('p' in req and req['p']) else 1  # 页码，如果没有默认第1页
 
     query = User.query
+
+    if 'mix_kw' in req:
+        # 关键字混合查询
+        rule = or_(User.nickname.ilike('%{0}'.format(req['mix_kw'])), User.mobile.ilike('%{0}'.format(req['mix_kw'])))
+        query = query.filter(rule)
+
+    if 'status' in req and int(req['status']) > -1:
+        # 状态查询
+        query = query.filter(User.status == int(req['status']))
 
     page_params = {
         'total': query.count(),  # 计算总页数
@@ -46,6 +56,8 @@ def index():
 
     resp_data['list'] = user_list
     resp_data['pages'] = pages
+    resp_data['search_con'] = req
+    resp_data['status_mapping'] = app.config['STATUS_MAPPING']
     return ops_render('/account/index.html', resp_data)
 
 

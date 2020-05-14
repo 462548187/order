@@ -1223,6 +1223,7 @@ button.dim:active:before {
   border: 1px solid #DDDDDD;
   color: inherit;
   float: left;
+  font-size: 13px;
   line-height: 1.42857;
   margin-left: -1px;
   padding: 4px 10px;
