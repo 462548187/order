@@ -26,7 +26,7 @@ def index():
     resp_data = {}
     req = request.values
 
-    page = int(req['page']) if ('page' in req and req['page']) else 1  # 页码，如果没有默认第1页
+    page = int(req['p']) if ('p' in req and req['p']) else 1  # 页码，如果没有默认第1页
 
     query = User.query
 
@@ -35,8 +35,7 @@ def index():
         'page_size': app.config['PAGE_SIZE'],
         'page': page,
         'display': app.config['PAGE_DISPLAY'],
-        'url': '/account/index'
-
+        'url': request.full_path.replace('&p={}'.format(page), '')
     }
 
     pages = iPagination(page_params)
@@ -45,7 +44,7 @@ def index():
 
     user_list = query.order_by(User.uid.desc()).all()[offset: limit]  # 按照uid倒序排列，查询所有数据，计算分页
 
-    resp_data['user_list'] = user_list
+    resp_data['list'] = user_list
     resp_data['pages'] = pages
     return ops_render('/account/index.html', resp_data)
 
