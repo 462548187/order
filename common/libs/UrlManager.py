@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from common.libs.Helper import getCurrentDateString
+import time
+from application import app
 
 
 class UrlManager(object):
@@ -12,6 +13,7 @@ class UrlManager(object):
 
     @staticmethod
     def buildStaticUrl(path):
-        ver = "%s" % (getCurrentDateString())
+        release_version = app.config.get('RELEASE_VERSION')
+        ver = "%s" % (int(time.time())) if not release_version else release_version
         path = "/static" + path + "?ver=" + ver
         return UrlManager.buildUrl(path)

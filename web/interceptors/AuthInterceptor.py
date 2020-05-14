@@ -17,6 +17,7 @@ from flask import g, request, redirect
 from common.models.User import User
 from common.libs.user.UserService import UserService
 from common.libs.UrlManager import UrlManager
+from common.libs.LogService import LogService
 
 """
 拦截器
@@ -29,6 +30,8 @@ def before_request():
     ignore_check_login_urls = app.config['IGNORE_CHECK_LOGIN_URLS']
 
     path = request.path
+
+    # 如果是静态文件就不要查询用户信息了
     pattern = re.compile('%s' % '|'.join(ignore_check_login_urls))
     if pattern.match(path):
         return
@@ -37,6 +40,9 @@ def before_request():
     g.current_user = None
     if user_info:
         g.current_user = user_info
+
+    # 加入日志
+    LogService.addAccessLog()
 
     pattern = re.compile('%s' % '|'.join(ignore_urls))
     if pattern.match(path):
@@ -74,6 +80,9 @@ def check_login():
         return False
 
     if auth_info[0] != UserService.geneAuthCode(user_info):  # 如果得到的cookies值和通过我们对数据库中值加密过后的不一样，则是伪造
+        return False
+
+    if user_info.status != 1:  # 已登录禁用账号刷新后退出登录
         return False
 
     return user_info

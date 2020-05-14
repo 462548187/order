@@ -19,6 +19,7 @@ from common.libs.Helper import ops_render, iPagination, getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.libs.user.UserService import UserService
 from common.models.User import User
+from common.models.log.AppAccessLog import AppAccessLog
 from sqlalchemy import or_
 
 route_account = Blueprint('account_page', __name__)
@@ -79,7 +80,10 @@ def info():
     if not user_info:
         return redirect(back_url)
 
+    # 按照id倒序排列，只显示10条数据
+    access_list = AppAccessLog.query.filter_by(uid=uid).order_by(AppAccessLog.id.desc()).limit(10).all()
     resp_data['user_info'] = user_info
+    resp_data['access_list'] = access_list
 
     return ops_render('/account/info.html', resp_data)
 

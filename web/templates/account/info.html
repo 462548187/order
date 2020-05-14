@@ -46,7 +46,16 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-									<tr><td colspan="2">暂无数据</td></tr>
+                                    {% if access_list %}
+                                        {% for item in access_list %}
+                                            <tr>
+                                                <th>{{ item.created_time }}</th>
+                                                <th>{{ item.target_url }}</th>
+                                            </tr>
+                                        {% endfor %}
+                                    {% else %}
+                                        <tr><td colspan="2">暂无数据</td></tr>
+                                    {% endif %}
                                      </tbody>
                                 </table>
                             </div>

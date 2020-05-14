@@ -84,12 +84,3 @@ def ops_render(template, context={}):
 
 def getCurrentDate(format_datetime='%Y-%m-%d %H:%M:%S'):
     return datetime.datetime.now().strftime(format_datetime)
-
-
-"""
-获取当前时间 年月日时分秒
-"""
-
-
-def getCurrentDateString(format_datetime='%Y%m%d%H%M%S'):
-    return datetime.datetime.now().strftime(format_datetime)

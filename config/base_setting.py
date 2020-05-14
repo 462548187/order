@@ -25,3 +25,6 @@ IGNORE_CHECK_LOGIN_URLS = [  # 静态文件路径
     '^/static',
     '^/favicon.ico'
 ]
+
+# 上线变量
+# RELEASE_VERSION = '20200513001'

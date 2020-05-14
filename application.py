@@ -4,8 +4,6 @@ from flask_script import Manager
 from flask_sqlalchemy import SQLAlchemy
 import os
 
-from common.libs.UrlManager import UrlManager
-
 
 class Application(Flask):
     def __init__(self, import_name, template_folder=None, static_folder=None, root_path=None):
@@ -19,12 +17,14 @@ class Application(Flask):
 
 
 db = SQLAlchemy()
-app = Application(__name__, template_folder=os.getcwd()+'/web/templates')
+app = Application(__name__, template_folder=os.getcwd() + '/web/templates')
 manager = Manager(app)
-
 
 """
 函数模板
 """
+
+from common.libs.UrlManager import UrlManager
+
 app.add_template_global(UrlManager.buildStaticUrl, 'buildStaticUrl')
 app.add_template_global(UrlManager.buildUrl, 'buildUrl')
