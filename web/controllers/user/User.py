@@ -63,6 +63,11 @@ def login():
         resp['msg'] = '请输入正确的用户名和密码(-2)'
         return jsonify(resp)
 
+    if user_info.status != 1:
+        resp['code'] = -1
+        resp['msg'] = '账号已被禁用，请联系管理员处理'
+        return jsonify(resp)
+
     response = make_response(json.dumps(resp))
     # # 设置了cookie，那么就能设置统一拦截器，防止客户端没有cookie而能进入后台，同时定义cookie的加密方式geneAuthCode
     response.set_cookie(app.config['AUTH_COOKIE_NAME'], '%s#%s' % (UserService.geneAuthCode(user_info), user_info.uid),
