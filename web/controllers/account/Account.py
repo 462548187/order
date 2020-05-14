@@ -171,10 +171,10 @@ def ops():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values
 
-    id = req['id'] if 'id' in req else ''
+    user_id = req['user_id'] if 'user_id' in req else ''
     act = req['act'] if 'act' in req else ''
 
-    if not id:
+    if not user_id:
         resq['code'] = -1
         resq['msg'] = '请选择要操作的账号'
         return jsonify(resq)
@@ -185,7 +185,7 @@ def ops():
         return jsonify(resq)
 
     # 查询用户信息是否存在
-    user_info = User.query.filter_by(uid=id).first()
+    user_info = User.query.filter_by(uid=user_id).first()
 
     if not user_info:
         resq['code'] = -1
