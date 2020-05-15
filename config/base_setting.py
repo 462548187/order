@@ -18,13 +18,20 @@ STATUS_MAPPING = {  # 账户搜索状态定义
 
 # 过滤不需要登录url
 IGNORE_URLS = [
-    '^/user/login'  # 登录地址
+    '^/user/login',  # 登录地址
+    '^/api'  # 不需要api接口
 ]
 
 IGNORE_CHECK_LOGIN_URLS = [  # 静态文件路径
     '^/static',
     '^/favicon.ico'
 ]
+
+# 小程序的配置
+MINA_APP={
+    'appid': 'wxca67a230b48dacfe',
+    'appkey': '5fbe74929aa67db05ca4b0cef5cb164a'
+}
 
 # 上线变量
 # RELEASE_VERSION = '20200513001'

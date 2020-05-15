@@ -6,7 +6,7 @@ App({
         userInfo: null,
         version: "1.0",
         shopName: "Python3 + Flask 订餐全栈系统",
-        domain:"http://192.168.0.119:8999/api"
+        domain:"http://127.0.0.1:8999/api"
     },
     tip:function( params ){
         var that = this;
@@ -56,5 +56,25 @@ App({
         return {
             'content-type': 'application/x-www-form-urlencoded'
         }
+    },
+    buildUrl:function (path, params) {
+                let url = this.globalData.domain + path;
+                let _paramUrl = "";
+                if (params){
+                    _paramUrl = Object.keys(params).map(function (k) {
+                        return [encodeURIComponent(k), encodeURIComponent(params[k])].join("=");
+
+                    }).join("&");
+                    /*
+                        例子：params = {
+                            a:"b",
+                            c:"d"
+                        };
+                        结果为："a=b&c=d"
+                    */
+
+                    _paramUrl = "?" + _paramUrl; // 参数拼接
+                }
+                return url + _paramUrl; // 完整url
     }
 });
