@@ -76,5 +76,19 @@ App({
                     _paramUrl = "?" + _paramUrl; // 参数拼接
                 }
                 return url + _paramUrl; // 完整url
+    },
+    getCache:function (key) {
+        var value = undefined
+        try {
+              value = wx.getStorageSync('key')
+            } catch (e) {
+            }
+            return value;
+    },
+    setCache:function (key, value) {
+        wx.setStorage({
+          key: key,
+          data: value
+        });
     }
 });

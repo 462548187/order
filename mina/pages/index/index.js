@@ -60,6 +60,7 @@ Page({
                   });
                   return;
                 }
+                app.setCache('token', res.data.data.token)
                 that.goToIndex();
               }
             });
@@ -90,6 +91,7 @@ Page({
                 app.alert({'content': res.data.msg});
                 return;
               }
+              app.setCache('token', res.data.data.token)
               that.goToIndex();
             }
           });
