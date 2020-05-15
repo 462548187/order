@@ -24,7 +24,7 @@ IGNORE_URLS = [
 
 IGNORE_CHECK_LOGIN_URLS = [  # 静态文件路径
     '^/static',
-    '^/favicon.ico'
+    # '^/favicon.ico'
 ]
 
 # 小程序的配置

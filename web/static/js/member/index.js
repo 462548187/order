@@ -17,7 +17,7 @@ let member_index_ops = {
             that.ops('recover', $(this).attr('data'));
         });
     },
-    ops:function (act, user_id) {
+    ops:function (act, member_id) {
         let callback = {
             'ok':function () {
                        $.ajax({
@@ -25,7 +25,7 @@ let member_index_ops = {
                             type: 'POST',
                             data: {
                                 act: act,
-                                user_id: user_id
+                                member_id: member_id
                             },
                             dataType: 'json',
                             success: function (res) {

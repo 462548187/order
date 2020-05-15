@@ -61,10 +61,10 @@
                         <td>{{ item.mobile }}</td>
                         <td>{{ item.status_desc }}</td>
                         <td>
+                            <a href="{{ buildUrl('/member/info') }}?id={{ item.id }}">
+                                <i class="fa fa-eye fa-lg"></i>
+                            </a>
                             {% if item.status == 1 %}
-                                <a href="{{ buildUrl('/member/info') }}?id={{ item.id }}">
-                                    <i class="fa fa-eye fa-lg"></i>
-                                </a>
                                 <a class="m-l" href="{{ buildUrl('/member/set') }}?id={{ item.id }}">
                                     <i class="fa fa-edit fa-lg"></i>
                                 </a>
