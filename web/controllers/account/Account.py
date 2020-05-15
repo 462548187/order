@@ -176,7 +176,7 @@ def set_page():
 
 
 # 删除和恢复
-@route_account.route('/ops', methods=['GET', 'POST'])
+@route_account.route('/ops', methods=['POST'])
 def ops():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values

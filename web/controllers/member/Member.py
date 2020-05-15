@@ -130,7 +130,7 @@ def comment():
 
 
 # 删除和恢复
-@route_member.route('/ops', methods=['GET', 'POST'])
+@route_member.route('/ops', methods=['POST'])
 def ops():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values
