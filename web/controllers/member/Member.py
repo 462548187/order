@@ -86,6 +86,9 @@ def member_set():
         if not member_info:
             return redirect(back_url)
 
+        if member_info != 1:  # 如果状态不是1，返回列表
+            return redirect(back_url)
+
         resp_data['member_info'] = member_info
         resp_data['current'] = 'index'
         return ops_render('/member/set.html', resp_data)

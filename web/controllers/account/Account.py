@@ -101,6 +101,11 @@ def set_page():
             user_info = User.query.filter_by(uid=uid).first()
         resp_data['user_info'] = user_info
 
+        back_url = UrlManager.buildUrl('/account/index')
+
+        if user_info.status != 1:  # 如果状态不是1，返回列表
+            return redirect(back_url)
+
         return ops_render('/account/set.html', resp_data)
 
     resp = {'code': 200, 'msg': '操作成功！', 'data': {}}
