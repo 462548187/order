@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, request
+from flask import Blueprint, redirect, request
 from sqlalchemy import or_
 
 from common.libs.Helper import ops_render, iPagination
+from common.libs.UrlManager import UrlManager
+from common.models.log.AppAccessLog import AppAccessLog
 from common.models.member.Member import Member
 from application import app
 
@@ -50,7 +52,23 @@ def index():
 
 @route_member.route("/info")
 def info():
-    return ops_render("member/info.html")
+    resp_data = {}
+    req = request.args
+
+    uid = int(req.get('id', 0))
+    back_url = UrlManager.buildUrl('/member/index')
+
+    if uid < 1:
+        return redirect(back_url)
+
+    member_info = Member.query.filter_by(id=uid).first()
+
+    if not member_info:
+        return redirect(back_url)
+
+    resp_data['member_info'] = member_info
+    resp_data['current'] = 'index'
+    return ops_render("member/info.html", resp_data)
 
 
 @route_member.route("/set")
