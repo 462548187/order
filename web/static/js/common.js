@@ -158,6 +158,12 @@ var common_ops = {
             _paramUrl = "?" + _paramUrl; // 参数拼接
         }
         return url + _paramUrl; // 完整url
+    },
+    buildPicUrl:function (img_key) {
+        var domain = $(".hidden_layout_wrap input[name=domain]").val();
+        var prefix_url = $(".hidden_layout_wrap input[name=prefix_url]").val();
+        // return domain + prefix_url  + img_key;
+        return 'http://0.0.0.0:8999/static/upload/' + img_key
     }
 };
 

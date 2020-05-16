@@ -91,7 +91,7 @@ def catSet():
     return jsonify(resp)  # 更改成功
 
 
-@route_food.route("/cat-ops" , methods=['POST'])
+@route_food.route("/cat-ops", methods=['POST'])
 def catOps():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values
