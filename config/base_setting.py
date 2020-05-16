@@ -28,9 +28,20 @@ IGNORE_CHECK_LOGIN_URLS = [  # 静态文件路径
 ]
 
 # 小程序的配置
-MINA_APP={
+MINA_APP = {
     'appid': 'wxca67a230b48dacfe',
     'appkey': '5fbe74929aa67db05ca4b0cef5cb164a'
+}
+
+# 文件上传配置
+UPLOAD = {
+    'ext': ['jpg', 'gif', 'bmp', 'jpeg', 'png'],
+    'prefix_path': '/web/static/upload/',
+    'prefix_url': '/static/upload/'
+}
+
+APP = {
+    'domain': 'http://127.0.0.1:8999/'
 }
 
 # 上线变量
