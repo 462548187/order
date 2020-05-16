@@ -134,7 +134,7 @@ def resetPwd():
     user_info = g.current_user
     user_info.login_pwd = UserService.genePwd(new_password, user_info.login_salt)  # 加密新密码
 
-    app.logger.info(user_info)
+    # app.logger.info(user_info)
     db.session.commit()  # 统一提交
 
     response = make_response(json.dumps(resp))

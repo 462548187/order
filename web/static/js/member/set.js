@@ -18,7 +18,7 @@ let member_set_ops = {
             let mobile = mobile_target.val();
 
             if(!nickname || nickname.length < 2){ //判断用户名，终止提交
-                common_ops.tip('请输入符合规范的姓名', nickname_target);
+                common_ops.tip('请输入符合规范的昵称', nickname_target);
                 return false;
             }
 
