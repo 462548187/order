@@ -5,7 +5,14 @@ var foot_set_ops = {
         this.initEditor();
     },
     eventBind:function () {
-
+        $('.wrap_food_set select[name=cat_id]').select2({
+            language:'zh-CN',
+            width:'100%'
+        });
+        $('.wrap_food_set input[name=tags]').tagsInput({
+            width:'auto',
+            height:40,
+        });
     },
     initEditor:function () {
         var that =this;
