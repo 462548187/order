@@ -21,7 +21,6 @@ def info():
 @route_food.route("/set", methods=['GET', 'POST'])
 def foodSet():
     if request.method == 'GET':
-
         return ops_render("food/set.html")
 
 
@@ -65,7 +64,7 @@ def catSet():
     name = req['name'] if 'name' in req else ''
     weight = int(req['weight']) if ('weight' in req and int(req['weight']) > 0) else 1
 
-    food_cat_info = FoodCat.query.filter_by(id=set_id).first()   # 获取uid，判断是否存在，存在是更新，否则就新增
+    food_cat_info = FoodCat.query.filter_by(id=set_id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
 
     if name is None or len(name) < 1:  # 判断用户名长度
         resp['code'] = -1
@@ -90,3 +89,43 @@ def catSet():
     db.session.commit()  # 统一提交
 
     return jsonify(resp)  # 更改成功
+
+
+@route_food.route("/cat-ops" , methods=['POST'])
+def catOps():
+    resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
+    req = request.values
+
+    id = req['id'] if 'id' in req else ''
+    act = req['act'] if 'act' in req else ''
+
+    if not id:
+        resq['code'] = -1
+        resq['msg'] = '请选择要操作的账号'
+        return jsonify(resq)
+
+    if act not in ['remove', 'recover']:
+        resq['code'] = -1
+        resq['msg'] = '操作有误，请重试'
+        return jsonify(resq)
+
+    # 查询用户信息是否存在
+    food_cat_info = FoodCat.query.filter_by(id=id).first()
+
+    if not food_cat_info:
+        resq['code'] = -1
+        resq['msg'] = '指定账号不存在'
+        return jsonify(resq)
+
+    if act == 'remove':
+        food_cat_info.status = 0
+    elif act == 'recover':
+        food_cat_info.status = 1
+    else:
+        return False
+
+    food_cat_info.update_time = getCurrentDate()  # 更新操作时间
+    db.session.add(food_cat_info)
+    db.session.commit()
+
+    return jsonify(resq)

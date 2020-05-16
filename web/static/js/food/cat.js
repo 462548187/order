@@ -17,7 +17,7 @@ let food_cat_ops = {
             that.ops('recover', $(this).attr('data'));
         });
     },
-    ops:function (act, user_id) {
+    ops:function (act, id) {
         let callback = {
             'ok':function () {
                        $.ajax({
@@ -25,7 +25,7 @@ let food_cat_ops = {
                             type: 'POST',
                             data: {
                                 act: act,
-                                user_id: user_id
+                                id: id
                             },
                             dataType: 'json',
                             success: function (res) {

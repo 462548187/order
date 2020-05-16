@@ -32,7 +32,7 @@ let member_set_ops = {
             let data = {
                 nickname: nickname,
                 mobile: mobile,
-                member_id:$('.wrap_member_set input[name=id]').val()
+                id:$('.wrap_member_set input[name=id]').val()
             };
 
             $.ajax({

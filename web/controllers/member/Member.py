@@ -96,7 +96,7 @@ def member_set():
     resp = {'code': 200, 'msg': '操作成功！', 'data': {}}
     req = request.values
 
-    member_id = req['member_id'] if 'member_id' in req else 0
+    id = req['id'] if 'id' in req else 0
     nickname = req['nickname'] if 'nickname' in req else ''
     mobile = req['mobile'] if 'mobile' in req else ''
 
@@ -110,7 +110,7 @@ def member_set():
         resp['msg'] = '请输入符合规范的手机'
         return jsonify(resp)
 
-    member_info = Member.query.filter_by(id=member_id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
+    member_info = Member.query.filter_by(id=id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
 
     if not member_info:
         resp['code'] = -1
@@ -138,10 +138,10 @@ def ops():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values
 
-    member_id = req['member_id'] if 'member_id' in req else ''
+    id = req['id'] if 'id' in req else ''
     act = req['act'] if 'act' in req else ''
 
-    if not member_id:
+    if not id:
         resq['code'] = -1
         resq['msg'] = '请选择要操作的账号'
         return jsonify(resq)
@@ -152,7 +152,7 @@ def ops():
         return jsonify(resq)
 
     # 查询用户信息是否存在
-    member_info = Member.query.filter_by(id=member_id).first()
+    member_info = Member.query.filter_by(id=id).first()
 
     if not member_info:
         resq['code'] = -1

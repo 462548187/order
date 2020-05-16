@@ -111,7 +111,7 @@ def set_page():
     resp = {'code': 200, 'msg': '操作成功！', 'data': {}}
     req = request.values
 
-    user_id = req['user_id'] if 'user_id' in req else 0
+    id = req['id'] if 'id' in req else 0
     nickname = req['nickname'] if 'nickname' in req else ''
     mobile = req['mobile'] if 'mobile' in req else ''
     email = req['email'] if 'email' in req else ''
@@ -143,13 +143,13 @@ def set_page():
         resp['msg'] = '请输入符合规范的登录密码'
         return jsonify(resp)
 
-    has_in = User.query.filter(User.login_name == login_name, User.uid != user_id).first()  # 判断用户名是否存在
+    has_in = User.query.filter(User.login_name == login_name, User.uid != id).first()  # 判断用户名是否存在
     if has_in:
         resp['code'] = -1
         resp['msg'] = '该登录名已存在，请重新输入'
         return jsonify(resp)
 
-    user_info = User.query.filter_by(uid=user_id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
+    user_info = User.query.filter_by(uid=id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
     if user_info:
         model_user = user_info
     else:
@@ -186,10 +186,10 @@ def ops():
     resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
     req = request.values
 
-    user_id = req['user_id'] if 'user_id' in req else ''
+    id = req['id'] if 'id' in req else ''
     act = req['act'] if 'act' in req else ''
 
-    if not user_id:
+    if not id:
         resq['code'] = -1
         resq['msg'] = '请选择要操作的账号'
         return jsonify(resq)
@@ -200,7 +200,7 @@ def ops():
         return jsonify(resq)
 
     # 查询用户信息是否存在
-    user_info = User.query.filter_by(uid=user_id).first()
+    user_info = User.query.filter_by(uid=id).first()
 
     if not user_info:
         resq['code'] = -1

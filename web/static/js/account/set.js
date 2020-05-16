@@ -60,7 +60,7 @@ let account_set_ops = {
                 email: email,
                 login_name: login_name,
                 login_pwd: login_pwd,
-                user_id:$('.wrap_account_set input[name=id]').val()
+                id:$('.wrap_account_set input[name=id]').val()
             };
 
             $.ajax({
