@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import Blueprint, jsonify, request
 
-from application import db
+from application import app, db
 from common.libs.Helper import getCurrentDate, ops_render
 from common.models.food.FoodCat import FoodCat
 
@@ -27,7 +27,21 @@ def foodSet():
 
 @route_food.route("/cat")
 def cat():
-    return ops_render("food/cat.html")
+    resp_data = {}
+    req = request.values
+    query = FoodCat.query
+
+    if 'status' in req and int(req['status']) > -1:
+        query = query.filter(FoodCat.status == int(req['status']))
+
+    cat_list = query.order_by(FoodCat.weight.desc(), FoodCat.id.desc()).all()
+
+    resp_data['list'] = cat_list
+    resp_data['search_con'] = req
+    resp_data['status_mapping'] = app.config['STATUS_MAPPING']
+    resp_data['current'] = 'cat'
+
+    return ops_render("food/cat.html", resp_data)
 
 
 @route_food.route("/cat-set", methods=['GET', 'POST'])
