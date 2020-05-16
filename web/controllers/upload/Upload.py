@@ -18,6 +18,7 @@ from common.libs.UploadService import UploadService
 
 from application import app
 from common.libs.UrlManager import UrlManager
+from common.models.Images import Image
 
 route_upload = Blueprint('upload_page', __name__)
 
@@ -44,6 +45,9 @@ def ueditor():
     if action == 'uploadimage':
         return uploadImage()
 
+    if action == "listimage":
+        return listImage()
+
     return "upload"
 
 
@@ -68,4 +72,26 @@ def uploadImage():
 
 
 def listImage():
-    pass
+    resp = {'state': 'SUCCESS', 'list': [], 'start': 0, 'total': 0}
+
+    req = request.values
+
+    start = int(req['start']) if 'start' in req else 0
+    page_size = int(req['size']) if 'size' in req else 20
+
+    query = Image.query
+    if start > 0:
+        query = query.filter(Image.id < start)
+
+    list = query.order_by(Image.id.desc()).limit(page_size).all()
+    images = []
+    if list:
+        for item in list:
+            images.append({'url': UrlManager.buildImageUrl(item.file_key)})
+            start = item.id
+
+    resp['list'] = images
+    resp['start'] = start
+    resp['total'] = len(images)
+
+    return jsonify(resp)

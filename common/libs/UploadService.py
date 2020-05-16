@@ -18,7 +18,8 @@ import uuid
 from flask import jsonify
 from werkzeug.utils import secure_filename
 from common.libs.Helper import getCurrentDate
-from application import app
+from common.models.Images import Image
+from application import app, db
 
 
 class UploadService:
@@ -47,9 +48,15 @@ class UploadService:
         file_name = str(uuid.uuid4()).replace('-', '') + '.' + ext  # 拼接文件名
         file.save(f'{save_dir}/{file_name}')
 
+        model_image = Image()
+        model_image.file_key = file_dir + '/' + file_name
+        model_image.created_time = getCurrentDate()
+        db.session.add(model_image)
+        db.session.commit()
+
         # 返回文件名
         resp['data'] = {
-            'file_key': file_dir + '/' + file_name
+            'file_key': model_image.file_key
         }
 
         return resp
