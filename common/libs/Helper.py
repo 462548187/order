@@ -84,3 +84,26 @@ def ops_render(template, context={}):
 
 def getCurrentDate(format_datetime='%Y-%m-%d %H:%M:%S'):
     return datetime.datetime.now().strftime(format_datetime)
+
+
+"""
+根据某个字段获取一个字典出来
+"""
+
+
+def getDictFilterField(db_model, select_filed, key_filed, id_list):
+    ret = {}
+    query = db_model.query
+    if id_list and len(id_list) > 0:
+        query = query.filter_by(select_filed.in_(id_list))
+
+    list = query.all()
+    if not list:
+        return ret
+    for item in list:
+        if not hasattr(item, key_filed):
+            break
+
+        ret[getattr(item, key_filed)] = item
+
+    return ret
