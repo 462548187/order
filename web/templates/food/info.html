@@ -88,71 +88,17 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-14 20:00:02</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-14 19:14:32</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-14 10:11:14</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-14 10:10:21</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-12 23:00:02</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-12 22:28:11</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-11 17:00:02</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-11 16:29:48</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-10 14:30:02</td>
-                                    </tr>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>订单过期释放库存</td>
-                                        <td>2018-03-10 14:30:02</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-10 13:57:43</td>
-                                    </tr>
-                                    <tr>
-                                        <td>-1</td>
-                                        <td>在线购买</td>
-                                        <td>2018-03-10 13:56:09</td>
-                                    </tr>
-                                    <tr>
-                                        <td>88</td>
-                                        <td></td>
-                                        <td>2018-03-01 14:40:02</td>
-                                    </tr>
+                                        {% if stock_change_list %}
+                                            {% for item in stock_change_list %}
+                                            <tr>
+                                            <td>{{ item.unit }}</td>
+                                            <td>{{ item.note }}</td>
+                                            <td>{{ item.created_time }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        {% else %}
+                                                <tr><td colspan="3">暂无数据</td></tr>
+                                        {% endif %}
                                     </tbody>
                                 </table>
                             </div>
