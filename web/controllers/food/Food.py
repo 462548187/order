@@ -9,6 +9,7 @@ from common.libs.Helper import getCurrentDate, getDictFilterField, iPagination, 
 from common.libs.UrlManager import UrlManager
 from common.models.food.Food import Food
 from common.models.food.FoodCat import FoodCat
+from common.models.food.FoodStockChangeLog import FoodStockChangeLog
 
 route_food = Blueprint('food_page', __name__)
 
@@ -65,11 +66,10 @@ def info():
     if not info:
         return redirect(reback_url)
 
-    # stock_change_list = FoodStockChangeLog.query.filter( FoodStockChangeLog.food_id == id )\
-    #     .order_by( FoodStockChangeLog.id.desc() ).all()
+    stock_change_list = FoodStockChangeLog.query.filter(FoodStockChangeLog.food_id == id).order_by(FoodStockChangeLog.id.desc()).all()
 
     resp_data['info'] = info
-    # resp_data['stock_change_list'] = stock_change_list
+    resp_data['stock_change_list'] = stock_change_list
     resp_data['current'] = 'index'
     return ops_render("food/info.html", resp_data)
 
