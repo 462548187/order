@@ -126,5 +126,5 @@ Page({
         this.setData({
             swiperCurrent: e.detail.current
         })
-    }
+    },
 });
