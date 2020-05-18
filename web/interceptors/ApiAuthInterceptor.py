@@ -13,12 +13,10 @@
 import re
 
 from application import app
-from flask import g, jsonify, request, redirect
+from flask import g, jsonify, request
 
 from common.libs.member.MemberService import MemberService
 from common.models.member.Member import Member
-
-
 
 """
 api认证
@@ -28,6 +26,7 @@ api认证
 @app.before_request
 def before_request():
     api_ignore_urls = app.config['API_IGNORE_URLS']
+
     path = request.path
     if '/api' not in path:
         return
@@ -36,8 +35,6 @@ def before_request():
     g.member_info = None
     if member_info:
         g.member_info = member_info
-
-
 
     pattern = re.compile('%s' % '|'.join(api_ignore_urls))
     if pattern.match(path):
@@ -62,6 +59,7 @@ def check_member_login():
         return False
 
     auth_info = auth_cookie.split('#')  # de0e0f7e2848bcbb9e00fd5458393257#1
+
     app.logger.info(auth_info)
     if len(auth_info) != 2:  # 不是标准的cookies
         return False

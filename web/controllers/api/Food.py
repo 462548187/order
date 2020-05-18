@@ -11,11 +11,12 @@
 @ModifyTime     :  
 """
 import requests, json
-from flask import request, jsonify
+from flask import g, request, jsonify
 from sqlalchemy import or_
 
 from application import app, db
 from common.libs.UrlManager import UrlManager
+from common.models.member.MemberCart import MemberCart
 from web.controllers.api import route_api
 from common.libs.Helper import getCurrentDate
 from common.models.food.FoodCat import FoodCat
@@ -106,6 +107,12 @@ def foodInfo():
         resp['msg'] = '商品已经下架了'
         return jsonify(resp)
 
+    member_info = g.member_info  # 购物车角标
+
+    cart_number = 0
+    if member_info:
+        cart_number = MemberCart.query.filter_by(member_id=member_info.id).count()
+
     resp['data']['info'] = {
         'id': food_info.id,
         'name': food_info.name,
@@ -117,5 +124,7 @@ def foodInfo():
         'stock': food_info.stock,
         'pics': [UrlManager.buildImageUrl(food_info.main_image)]
     }
+
+    resp['data']['cart_number'] = cart_number
 
     return jsonify(resp)
