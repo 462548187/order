@@ -19,6 +19,10 @@ STATUS_MAPPING = {  # 账户搜索状态定义
 # 过滤不需要登录url
 IGNORE_URLS = [
     '^/user/login',  # 登录地址
+]
+
+# 过滤不需要登录url
+API_IGNORE_URLS = [
     '^/api'  # 不需要api接口
 ]
 

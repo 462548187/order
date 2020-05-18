@@ -149,30 +149,22 @@ Page({
 
     },
     onShareAppMessage:function () {
-        var that = this;
-        app.console('111');
-        return{
-            title: that.data.info.name,
-            path: '/pages/food/info?id=' + that.data.info.id,
-            success:function(res) {
-                app.console('2222');
-                //转发成功
-                wx.request({
-                    url: app.buildUrl('/member/share'),
-                    header:app.getRequestHeader(),
-                    method:'POST',
-                    data:{
-                        url: utils.getCurrentPageUrlWithArgs()
-                    },
-                    success:function (res) {
+            var that = this;
+            wx.request({
+                        url: app.buildUrl('/member/share'),
+                        header:app.getRequestHeader(),
+                        method:'POST',
+                        data:{
+                            url: utils.getCurrentPageUrlWithArgs()
+                        },
+                        success:function (res) {
 
-                    }
-                });
-            },
-            fail:function(res) {
-                app.console('333');
-                //转发失败
-            }
+                        }
+                    })
+            return {
+                title: that.data.info.name,
+                path: '/pages/food/info?id=' + that.data.info.id,
+
+            };
         }
-    }
 });

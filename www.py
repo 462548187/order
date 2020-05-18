@@ -5,6 +5,8 @@ from application import app
 统一拦截器,处理和统一错误处理
 """
 from web.interceptors.AuthInterceptor import *
+from web.interceptors.ApiAuthInterceptor import *
+
 # 404错误页面
 from web.interceptors.ErrorInterceptor import *
 
