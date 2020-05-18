@@ -2,6 +2,7 @@
 //获取应用实例
 var app = getApp();
 var WxParse = require('../../wxParse/wxParse.js');
+var utils = require('../../utils/util.js');
 
 Page({
     data: {
@@ -131,12 +132,14 @@ Page({
                 var resp = res.data;
                 if (resp.code != 200){
                     app.alert({'content':resp.msg});
-                    return;
+                    wx.navigateTo({
+                        url:'/page/food/index'
+                    });
+
                 }
-                var info_list = resp.data.info;
                 that.setData({
-                    info: info_list,
-                    buyNumMax: info_list.stock,
+                    info: resp.data.info,
+                    buyNumMax: resp.data.info.stock,
 
                 });
                 WxParse.wxParse('article', 'html', that.data.info.summary, that, 5);
@@ -144,5 +147,32 @@ Page({
 
         });
 
+    },
+    onShareAppMessage:function () {
+        var that = this;
+        app.console('111');
+        return{
+            title: that.data.info.name,
+            path: '/pages/food/info?id=' + that.data.info.id,
+            success:function(res) {
+                app.console('2222');
+                //转发成功
+                wx.request({
+                    url: app.buildUrl('/member/share'),
+                    header:app.getRequestHeader(),
+                    method:'POST',
+                    data:{
+                        url: utils.getCurrentPageUrlWithArgs()
+                    },
+                    success:function (res) {
+
+                    }
+                });
+            },
+            fail:function(res) {
+                app.console('333');
+                //转发失败
+            }
+        }
     }
 });
