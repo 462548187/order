@@ -74,7 +74,7 @@ def iPagination(params):
 def ops_render(template, context={}):
     if 'current_user' in g:
         context['current_user'] = g.current_user
-        return render_template(template, **context)
+    return render_template( template,**context )
 
 
 """
@@ -82,8 +82,10 @@ def ops_render(template, context={}):
 """
 
 
-def getCurrentDate(format_datetime='%Y-%m-%d %H:%M:%S'):
-    return datetime.datetime.now().strftime(format_datetime)
+def getCurrentDate( format = "%Y-%m-%d %H:%M:%S"):
+    #return datetime.datetime.now().strftime( format )
+    return datetime.datetime.now()
+
 
 
 """
@@ -91,19 +93,19 @@ def getCurrentDate(format_datetime='%Y-%m-%d %H:%M:%S'):
 """
 
 
-def getDictFilterField(db_model, select_filed, key_filed, id_list):
+def getDictFilterField( db_model,select_filed,key_field,id_list ):
     ret = {}
     query = db_model.query
-    if id_list and len(id_list) > 0:
-        query = query.filter_by(select_filed.in_(id_list))
+    if id_list and len( id_list ) > 0:
+        query = query.filter( select_filed.in_( id_list ) )
 
     list = query.all()
     if not list:
         return ret
     for item in list:
-        if not hasattr(item, key_filed):
+        if not hasattr( item,key_field ):
             break
 
-        ret[getattr(item, key_filed)] = item
-
+        ret[ getattr( item,key_field ) ] = item
     return ret
+

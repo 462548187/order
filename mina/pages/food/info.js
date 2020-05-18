@@ -71,24 +71,23 @@ Page({
         this.bindGuiGeTap();
     },
     addShopCar: function () {
-        var that = this
+        var that = this;
         var data = {
-            'id':this.data.info.id,
-            'number':this.data.buyNumber
+            "id": this.data.info.id,
+            "number": this.data.buyNumber
         };
         wx.request({
-            url:app.buildUrl('/cart/set'),
-            header:app.getRequestHeader(),
-            method:'POST',
-            data:data,
-            success:function(res) {
+            url: app.buildUrl("/cart/set"),
+            header: app.getRequestHeader(),
+            method: 'POST',
+            data: data,
+            success: function (res) {
                 var resp = res.data;
-                app.alert({'content':resp.msg});
+                app.alert({"content": resp.msg});
                 that.setData({
-                    hideShopPopup:true
+                    hideShopPopup: true
                 });
             }
-
         });
     },
     buyNow: function () {
@@ -113,7 +112,7 @@ Page({
         })
     },
     numJianTap: function () {
-        if( this.data.buyNumber <= this.data.buyNumMin){
+        if (this.data.buyNumber <= this.data.buyNumMin) {
             return;
         }
         var currentNum = this.data.buyNumber;
@@ -123,7 +122,7 @@ Page({
         });
     },
     numJiaTap: function () {
-        if( this.data.buyNumber >= this.data.buyNumMax ){
+        if (this.data.buyNumber >= this.data.buyNumMax) {
             return;
         }
         var currentNum = this.data.buyNumber;
@@ -138,30 +137,31 @@ Page({
             swiperCurrent: e.detail.current
         })
     },
-    getInfo:function () {
+    getInfo: function () {
         var that = this;
         wx.request({
-            url:app.buildUrl('/food/info'),
-            header:app.getRequestHeader(),
-            data:{
-                id:that.data.id,
+            url: app.buildUrl("/food/info"),
+            header: app.getRequestHeader(),
+            data: {
+                id: that.data.id
             },
-            success:function(res) {
+            success: function (res) {
                 var resp = res.data;
-                if (resp.code != 200){
-                    app.alert({'content':resp.msg});
+                if (resp.code != 200) {
+                    app.alert({"content": resp.msg});
                     wx.navigateTo({
-                        url:'/page/food/index'
+                        url: "/pages/food/index"
                     });
-
+                    return;
                 }
+
                 that.setData({
                     info: resp.data.info,
                     buyNumMax: resp.data.info.stock,
                     shopCarNum:resp.data.cart_number
-
                 });
-                WxParse.wxParse('article', 'html', that.data.info.summary, that, 5);
+
+                WxParse.wxParse('article', 'html', resp.data.info.summary, that, 5);
             }
 
         });
@@ -170,13 +170,13 @@ Page({
     onShareAppMessage:function () {
             var that = this;
             wx.request({
-                        url: app.buildUrl('/member/share'),
-                        header:app.getRequestHeader(),
-                        method:'POST',
-                        data:{
-                            url: utils.getCurrentPageUrlWithArgs()
-                        },
-                        success:function (res) {
+                    url: app.buildUrl("/member/share"),
+                    header: app.getRequestHeader(),
+                    method: 'POST',
+                    data: {
+                        url: utils.getCurrentPageUrlWithArgs()
+                    },
+                    success: function (res) {
 
                         }
                     })

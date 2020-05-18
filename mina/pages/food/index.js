@@ -16,11 +16,10 @@ Page({
         loadingMoreHidden: true,
         searchInput: '',
         p:1,
-        processing:false,
+        processing:false
     },
     onLoad: function () {
         var that = this;
-
         wx.setNavigationBarTitle({
             title: app.globalData.shopName
         });
@@ -41,18 +40,18 @@ Page({
             swiperCurrent: e.detail.current
         })
     },
-	listenerSearchInput:function( e ){
-	        this.setData({
-	            searchInput: e.detail.value
-	        });
-	 },
-	 toSearch:function( e ){
-	        this.setData({
-	            p:1,
-	            goods:[],
-	            loadingMoreHidden:true
-	        });
-	        this.getFoodList();
+    listenerSearchInput:function( e ){
+        this.setData({
+            searchInput: e.detail.value
+        });
+    },
+    toSearch:function( e ){
+        this.setData({
+            p:1,
+            goods:[],
+            loadingMoreHidden:true
+        });
+        this.getFoodList();
 	},
     tapBanner: function (e) {
         if (e.currentTarget.dataset.id != 0) {
@@ -66,17 +65,18 @@ Page({
             url: "/pages/food/info?id=" + e.currentTarget.dataset.id
         });
     },
-    getBannerAndCat:function () {
+    getBannerAndCat: function () {
         var that = this;
         wx.request({
-            url:app.buildUrl('/food/index'),
-            header:app.getRequestHeader(),
-            success:function(res) {
+            url: app.buildUrl("/food/index"),
+            header: app.getRequestHeader(),
+            success: function (res) {
                 var resp = res.data;
-                if (resp.code != 200){
-                    app.alert({'content':resp.msg});
+                if (resp.code != 200) {
+                    app.alert({"content": resp.msg});
                     return;
                 }
+
                 that.setData({
                     banners: resp.data.banner_list,
                     categories: resp.data.cat_list
@@ -84,65 +84,67 @@ Page({
                 that.getFoodList();
             }
         });
-
     },
-    catClick:function(e){
+    catClick: function (e) {
         this.setData({
-            activeCategoryId:e.currentTarget.id,
+            activeCategoryId: e.currentTarget.id
+        });
+        this.setData({
             loadingMoreHidden: true,
             p:1,
             goods:[]
         });
         this.getFoodList();
     },
-    onReachBottom:function(){
+    onReachBottom: function () {
         var that = this;
         setTimeout(function () {
             that.getFoodList();
-        },500);
+        }, 500);
     },
-    getFoodList:function () {
+    getFoodList: function () {
         var that = this;
-        if(that.data.processing){
-            app.console(2)
+        if( that.data.processing ){
             return;
         }
 
-        if(!that.data.loadingMoreHidden){
-            app.console(2)
+        if( !that.data.loadingMoreHidden ){
             return;
         }
+
         that.setData({
             processing:true
         });
 
         wx.request({
-            url:app.buildUrl('/food/search'),
-            header:app.getRequestHeader(),
-            data:{
-                cat_id:that.data.activeCategoryId,
-                mix_kw:that.data.searchInput,
-                p:that.data.p
+            url: app.buildUrl("/food/search"),
+            header: app.getRequestHeader(),
+            data: {
+                cat_id: that.data.activeCategoryId,
+                mix_kw: that.data.searchInput,
+                p: that.data.p,
             },
-            success:function(res) {
+            success: function (res) {
                 var resp = res.data;
-                if (resp.code != 200){
-                    app.alert({'content':resp.msg});
+                if (resp.code != 200) {
+                    app.alert({"content": resp.msg});
                     return;
                 }
+
                 var goods = resp.data.list;
                 that.setData({
                     goods: that.data.goods.concat( goods ),//内容加载不是覆盖
                     p: that.data.p + 1,
                     processing:false
                 });
-                if(resp.data.has_more == 0){
+
+                if( resp.data.has_more == 0 ){
                     that.setData({
                         loadingMoreHidden: false
                     });
                 }
+
             }
         });
-
     }
 });

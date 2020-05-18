@@ -13,7 +13,8 @@
 import json
 from flask import request, g
 
-from application import db
+from application import app,db
+import json
 from common.libs.Helper import getCurrentDate
 from common.models.log.AppAccessLog import AppAccessLog
 from common.models.log.AppErrorLog import AppErrorLog
@@ -30,7 +31,7 @@ class LogService:
         if 'current_user' in g and g.current_user is not None:
             target.uid = g.current_user.uid
 
-        target.ua = request.headers.get('User-Agent')
+        target.ua = request.headers.get( "User-Agent" )
         target.created_time = getCurrentDate()
 
         db.session.add(target)
@@ -38,7 +39,9 @@ class LogService:
         return True
 
     @staticmethod
-    def addErrorLog(content):
+    def addErrorLog( content ):
+        if 'favicon.ico' in request.url:
+            return
         target = AppErrorLog()
         target.target_url = request.url
         target.referer_url = request.referrer

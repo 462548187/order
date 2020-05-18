@@ -55,17 +55,16 @@ App({
     getRequestHeader:function(){
         return {
             'content-type': 'application/x-www-form-urlencoded',
-            'Authorization': this.getCache("token")
+            'Authorization': this.getCache( "token" )
         }
     },
-    buildUrl:function (path, params) {
-                let url = this.globalData.domain + path;
-                let _paramUrl = "";
-                if (params){
-                    _paramUrl = Object.keys(params).map(function (k) {
-                        return [encodeURIComponent(k), encodeURIComponent(params[k])].join("=");
-
-                    }).join("&");
+    buildUrl:function( path,params ){
+        var url = this.globalData.domain + path;
+        var _paramUrl = "";
+        if(  params ){
+            _paramUrl = Object.keys( params ).map( function( k ){
+                return [ encodeURIComponent( k ),encodeURIComponent( params[ k ] ) ].join("=");
+            }).join("&");
                     /*
                         例子：params = {
                             a:"b",
@@ -74,22 +73,22 @@ App({
                         结果为："a=b&c=d"
                     */
 
-                    _paramUrl = "?" + _paramUrl; // 参数拼接
-                }
-                return url + _paramUrl; // 完整url
+            _paramUrl = "?" + _paramUrl;
+        }
+        return url + _paramUrl;
     },
-    getCache:function (key) {
-        var value = undefined
+    getCache:function( key ){
+        var value = undefined;
         try {
-              value = wx.getStorageSync(key)
-            } catch (e) {
-            }
-            return value;
+            value = wx.getStorageSync( key );
+        } catch (e) {
+        }
+        return value;
     },
-    setCache:function (key, value) {
+    setCache:function(key,value){
         wx.setStorage({
-          key: key,
-          data: value
+             key:key,
+            data:value
         });
     }
 });
