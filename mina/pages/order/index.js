@@ -31,9 +31,13 @@ Page({
     },
     onShow: function () {
         var that = this;
+        this.getOrderInfo();
     },
     onLoad: function (e) {
         var that = this;
+        that.setData({
+            params:JSON.parse(e.data)
+        })
     },
     createOrder: function (e) {
         wx.showLoading();
@@ -51,6 +55,21 @@ Page({
         wx.navigateTo({
             url: "/pages/my/addressList"
         });
-    }
+    },
+    getOrderInfo:function () {//获取订单信息
+        var that = this;
+        var data = {
+            type:this.data.params.type,
+            goods:JSON.stringify(this.data.params.goods)
+        };
+        wx.request({
+            url:app.buildUrl("/order/info"),
+            header:app.getRequestHeader(),
+            method:'POST',
+            data:data,
+            success(res) {
 
+            }
+        });
+    }
 });
