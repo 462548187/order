@@ -23,8 +23,26 @@ Page({
     createOrder: function (e) {
         wx.showLoading();
         var that = this;
-        wx.navigateTo({
-            url: "/pages/my/order_list"
+        var data = {
+            type:this.data.params.type,
+            goods:JSON.stringify(this.data.params.goods)
+        };
+        wx.request({
+            url:app.buildUrl("/order/create"),
+            header:app.getRequestHeader(),
+            method:'POST',
+            data:data,
+            success(res) {
+                wx.hideLoading();
+                var resp = res.data;
+                if (resp.code != 200) {
+                    app.alert({"content": resp.msg});
+                    return;
+                }
+                wx.navigateTo({
+                url: "/pages/my/order_list"
+                });
+            }
         });
     },
     addressSet: function () {
