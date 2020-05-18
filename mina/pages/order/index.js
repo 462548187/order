@@ -32,7 +32,7 @@ Page({
             header:app.getRequestHeader(),
             method:'POST',
             data:data,
-            success(res) {
+            success:function(res) {
                 wx.hideLoading();
                 var resp = res.data;
                 if (resp.code != 200) {
@@ -66,7 +66,7 @@ Page({
             header:app.getRequestHeader(),
             method:'POST',
             data:data,
-            success(res) {
+            success:function(res) {
                 var resp = res.data;
                 if(resp.code!=200){
                     app.alert({"content":resp.msg});

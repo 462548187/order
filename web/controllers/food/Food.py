@@ -7,6 +7,7 @@ from sqlalchemy import or_
 from application import app, db
 from common.libs.Helper import getCurrentDate, getDictFilterField, iPagination, ops_render
 from common.libs.UrlManager import UrlManager
+from common.libs.food.FoodService import FoodService
 from common.models.food.Food import Food
 from common.models.food.FoodCat import FoodCat
 from common.models.food.FoodStockChangeLog import FoodStockChangeLog
@@ -164,7 +165,8 @@ def foodSet():
     db.session.add(model_food)
     db.session.commit()
 
-    # FoodService.setStockChangeLog( model_food.id,int(stock) - int(before_stock),"后台修改" )
+    # 库存修改日志
+    FoodService.setStockChangeLog(model_food.id, int(stock) - int(before_stock), "后台修改")
     return jsonify(resp)
 
 
