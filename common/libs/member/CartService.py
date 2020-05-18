@@ -19,7 +19,18 @@ from common.models.member.MemberCart import MemberCart
 class CartService:
 
     @staticmethod
-    def setItem(member_id=0, food_id=0, number=0):
+    def deleteItem(member_id=0, items=None):  # 删除购物车选中商品
+        if member_id < 1 or not items:
+            return False
+
+        for item in items:
+            MemberCart.query.filter_by(food_id=item['id'], member_id=member_id).delete()
+
+        db.session.commit()
+        return True
+
+    @staticmethod
+    def setItem(member_id=0, food_id=0, number=0):  # 加入购物车
         if member_id < 1 or food_id < 1 or number < 1:
             return False
 

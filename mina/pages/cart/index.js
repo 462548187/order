@@ -132,15 +132,28 @@ Page({
     //选中删除的数据
     deleteSelected: function () {
         var list = this.data.list;
-        var cart_ids = [];
+        var goods = [];
         list = list.filter(function ( item ) {
-            if( !item.active ){
-                cart_ids.append( item.id );
+            if( item.active ){
+                goods.push( {
+                    "id":item.food_id,
+                });
             }
             return !item.active;
         });
         this.setPageData( this.getSaveHide(), this.totalPrice(), this.allSelect(), this.noSelect(), list);
         //发送请求到后台删除数据
+        wx.request({
+            url: app.buildUrl("/cart/del"),
+            header: app.getRequestHeader(),
+            method:'POST',
+            data:{
+                goods : JSON.stringify(goods)
+            },
+            success: function (res) {
+
+            }
+        });
     },
     getCartList: function () {
         var that = this
