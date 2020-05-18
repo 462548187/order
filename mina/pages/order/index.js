@@ -3,30 +3,11 @@ var app = getApp();
 
 Page({
     data: {
-        goods_list: [
-            {
-                id:22,
-                name: "小鸡炖蘑菇",
-                price: "85.00",
-                pic_url: "/images/food.jpg",
-                number: 1,
-            },
-            {
-                id:22,
-                name: "小鸡炖蘑菇",
-                price: "85.00",
-                pic_url: "/images/food.jpg",
-                number: 1,
-            }
-        ],
-        default_address: {
-            name: "编程浪子",
-            mobile: "12345678901",
-            detail: "上海市浦东新区XX",
-        },
-        yun_price: "1.00",
-        pay_price: "85.00",
-        total_price: "86.00",
+        goods_list: [],
+        default_address: null,
+        yun_price: "0.00",
+        pay_price: "0.00",
+        total_price: "0.00",
         params: null
     },
     onShow: function () {
@@ -68,6 +49,20 @@ Page({
             method:'POST',
             data:data,
             success(res) {
+                var resp = res.data;
+                if(resp.code!=200){
+                    app.alert({"content":resp.msg});
+                    return;
+                }
+                that.setData({
+                    goods_list:resp.data.food_list,
+                    default_address:resp.data.default_address,
+                    yun_price:resp.data.yun_price,
+                    pay_price:resp.data.pay_price,
+                    total_price:resp.data.total_price,
+
+
+                });
 
             }
         });
