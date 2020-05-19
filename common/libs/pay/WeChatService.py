@@ -70,31 +70,31 @@ class WeChatService:
 
         return False
 
-
-    def dict_to_xml(self,dict_data):
-        '''
+    def dict_to_xml(self, dict_data):
+        """
         dict to xml
         :param dict_data:
         :return:
-        '''
+        """
         xml = ["<xml>"]
         for k, v in dict_data.items():
             xml.append("<{0}>{1}</{0}>".format(k, v))
         xml.append("</xml>")
         return "".join(xml)
 
-    def xml_to_dict(self,xml_data):
-        '''
+    def xml_to_dict(self, xml_data):
+        """
         xml to dict
         :param xml_data:
         :return:
-        '''
+        """
         xml_dict = {}
         root = ET.fromstring(xml_data)
         for child in root:
             xml_dict[child.tag] = child.text
 
         return xml_dict
+
     def get_nonce_str(self):
         """
         获取随机字符串
