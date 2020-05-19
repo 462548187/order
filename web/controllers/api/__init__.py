@@ -19,6 +19,7 @@ from web.controllers.api.Member import *
 from web.controllers.api.Food import *
 from web.controllers.api.cart import *
 from web.controllers.api.order import *
+from web.controllers.api.my import *
 
 
 @route_api.route('/')
