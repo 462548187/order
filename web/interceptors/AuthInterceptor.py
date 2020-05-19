@@ -32,27 +32,27 @@ def before_request():
     path = request.path
 
     # 如果是静态文件就不要查询用户信息了
-    pattern = re.compile('%s' % '|'.join(ignore_check_login_urls))
+    pattern = re.compile('%s' % "|".join(ignore_check_login_urls))
     if pattern.match(path):
         return
 
     if '/api' in path:
         return
 
+
     user_info = check_login()
     g.current_user = None
     if user_info:
         g.current_user = user_info
 
-    # 加入日志
+    #加入日志
     LogService.addAccessLog()
-
-    pattern = re.compile('%s' % '|'.join(ignore_urls))
+    pattern = re.compile('%s' % "|".join(ignore_urls))
     if pattern.match(path):
         return
 
-    if not user_info:
-        return redirect(UrlManager.buildUrl('/user/login'))
+    if not user_info :
+        return redirect( UrlManager.buildUrl( "/user/login" ) )
 
     return
 
@@ -63,14 +63,18 @@ def before_request():
 
 
 def check_login():
-    cookies = request.cookies  # 从请求中获取cookies
-    auth_cookie = cookies[app.config['AUTH_COOKIE_NAME']] if app.config['AUTH_COOKIE_NAME'] in cookies else ''
-    # app.logger.info(auth_cookies) # 查看日志是否有cookies值，可以利用logger，也可以看页面交互模式下application中的cookies
+    cookies = request.cookies
+    auth_cookie = cookies[app.config['AUTH_COOKIE_NAME']] if app.config['AUTH_COOKIE_NAME'] in cookies else None
 
+
+    if '/api' in request.path:
+        app.logger.info(request.path)
+        auth_cookie = request.headers.get("Authorization")
+        app.logger.info( request.headers.get("Authorization") )
     if auth_cookie is None:  # 如果页面中没有cookies
         return False
 
-    auth_info = auth_cookie.split('#')  # de0e0f7e2848bcbb9e00fd5458393257#1
+    auth_info = auth_cookie.split("#")  # de0e0f7e2848bcbb9e00fd5458393257#1
     if len(auth_info) != 2:   # 不是标准的cookies
         return False
 

@@ -24,9 +24,9 @@
                     <select name="cat_id" class="form-control select2-hidden-accessible" tabindex="-1"
                             aria-hidden="true">
                         <option value="0">请选择分类</option>
-                        {% for item in cat_list %}
-                            <option value="{{ item.id }}" {% if item.id == info.id %} selected {% endif %}>{{ item.name }}</option>
-                        {% endfor %}
+                       {% for item in cat_list %}
+                           <option value="{{ item.id }}" {%  if item.id == info.cat_id %} selected {% endif %}>{{ item.name }}</option>
+                       {% endfor %}
                     </select>
                 </div>
             </div>
@@ -53,12 +53,12 @@
                             <i class="fa fa-upload fa-2x"></i>
                             <input type="file" name="pic" accept="image/png, image/jpeg, image/jpg,image/gif">
                         </div>
-                            {% if info and info.main_image %}
-                                <span class="pic-each">
-                                    <img src="{{ buildImageUrl(info.main_image) }}" />
-                                    <span class="fa fa-times-circle del del_image" data="{{ info.main_image }}"></span>
-                                </span>
-                            {% endif %}
+                        {% if info and info.main_image %}
+                        <span class="pic-each">
+                            <img src="{{ buildImageUrl( info.main_image ) }}"/>
+                            <span class="fa fa-times-circle del del_image" data="{{ info.main_image }}"></span>
+                        </span>
+                        {% endif %}
                     </form>
                 </div>
             </div>
@@ -94,23 +94,24 @@
     </div>
 </div>
     {#无刷新上传#}
-    <iframe name="upload_file" class="hide"></iframe>
+<iframe name="upload_file" class="hide"></iframe>
 
 {% endblock %}
-{% block css %}
-    <link href="{{ buildStaticUrl('/plugins/select2/select2.min.css') }}" rel="stylesheet">
-    <link href="{{ buildStaticUrl('/plugins/tagsinput/jquery.tagsinput.min.css') }}" rel="stylesheet">
+{%  block css %}
+<link href="{{ buildStaticUrl( '/plugins/select2/select2.min.css' ) }}" rel="stylesheet">
+<link href="{{ buildStaticUrl( '/plugins/tagsinput/jquery.tagsinput.min.css' ) }}" rel="stylesheet">
 {% endblock %}
 {% block js %}
-    <script src="{{ buildStaticUrl('/plugins/ueditor/ueditor.config.js') }}"></script>
-    <script src="{{ buildStaticUrl('/plugins/ueditor/ueditor.all.min.js') }}"></script>
-    <script src="{{ buildStaticUrl('/plugins/ueditor/lang/zh-cn/zh-cn.js') }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/ueditor/ueditor.config.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/ueditor/ueditor.all.min.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/ueditor/lang/zh-cn/zh-cn.js' ) }}"></script>
 
-    <script src="{{ buildStaticUrl('/plugins/select2/select2.pinyin.js') }}"></script>
-    <script src="{{ buildStaticUrl('/plugins/select2/pinyin.core.js') }}"></script>
-    <script src="{{ buildStaticUrl('/plugins/select2/zh-CN.js') }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/select2/select2.pinyin.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/select2/zh-CN.js' ) }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/select2/pinyin.core.js' ) }}"></script>
 
-    <script src="{{ buildStaticUrl('/plugins/tagsinput/jquery.tagsinput.min.js') }}"></script>
+<script src="{{ buildStaticUrl( '/plugins/tagsinput/jquery.tagsinput.min.js' ) }}"></script>
 
-    <script src="{{ buildStaticUrl('/js/food/set.js') }}"></script>
+
+<script src="{{ buildStaticUrl( '/js/food/set.js' ) }}"></script>
 {% endblock %}

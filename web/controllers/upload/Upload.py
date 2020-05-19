@@ -18,7 +18,7 @@ from common.libs.UploadService import UploadService
 
 from application import app
 from common.libs.UrlManager import UrlManager
-from common.models.Images import Image
+from common.models.Image import Image
 
 route_upload = Blueprint('upload_page', __name__)
 

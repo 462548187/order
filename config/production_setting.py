@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
-
-SERVER_PORT = 8080
 DEBUG = True
-
-AUTH_COOKIE_NAME = "mooc_food"
-
 SQLALCHEMY_ECHO = True
-SQLALCHEMY_DATABASE_URI = 'mysql://root:123456@127.0.0.1:3306/food_db'
+SQLALCHEMY_DATABASE_URI = 'mysql://root:58plPi56SdYP8a63@127.0.0.1/food_db?charset=utf8mb4'
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 SQLALCHEMY_ENCODING = "utf8mb4"
+
+APP = {
+    'domain':'https://food.54php.cn'
+}
+
+RELEASE_VERSION="20180729001"

@@ -21,7 +21,7 @@ from common.libs.Helper import getCurrentDate
 from common.libs.food.FoodService import FoodService
 from common.models.food.Food import Food
 from common.models.pay.PayOrder import PayOrder
-from common.models.pay.PayOrderCallbackData import PayOrderCallbackDatum
+from common.models.pay.PayOrderCallbackData import PayOrderCallbackData
 from common.models.pay.PayOrderItem import PayOrderItem
 
 

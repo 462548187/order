@@ -82,7 +82,7 @@ def setCart():
         resp['msg'] = '添加购物车失败，库存不足'
         return jsonify(resp)
 
-    ret = CartService.setItem(member_id=member_info.id, food_id=food_id, number=number)
+    ret = CartService.setItems(member_id=member_info.id, food_id=food_id, number=number)
     if not ret:
         resp['code'] = -1
         resp['msg'] = '添加购物车失败(-4)'

@@ -24,7 +24,7 @@ api认证
 
 
 @app.before_request
-def before_request():
+def before_request_api():
     api_ignore_urls = app.config['API_IGNORE_URLS']
 
     path = request.path
@@ -36,7 +36,7 @@ def before_request():
     if member_info:
         g.member_info = member_info
 
-    pattern = re.compile('%s' % '|'.join(api_ignore_urls))
+    pattern = re.compile('%s' % "|".join( api_ignore_urls ))
     if pattern.match(path):
         return
 
@@ -53,14 +53,12 @@ def before_request():
 
 
 def check_member_login():
-    auth_cookie = request.headers.get('Authorization')
+    auth_cookie = request.headers.get("Authorization")
 
     if auth_cookie is None:  # 如果页面中没有cookies
         return False
 
-    auth_info = auth_cookie.split('#')  # de0e0f7e2848bcbb9e00fd5458393257#1
-
-    app.logger.info(auth_info)
+    auth_info = auth_cookie.split("#")  # de0e0f7e2848bcbb9e00fd5458393257#1
     if len(auth_info) != 2:  # 不是标准的cookies
         return False
 

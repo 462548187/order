@@ -5,20 +5,19 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 
-class Application(Flask):
-    def __init__(self, import_name, template_folder=None, static_folder=None, root_path=None):
-        super(Application, self).__init__(import_name, template_folder=template_folder, static_folder=static_folder,
-                                          root_path=root_path)
-        self.config.from_pyfile('config/base_setting.py')
+class Application( Flask ):
+    def __init__(self,import_name , template_folder = None,root_path = None ):
+        super( Application,self ).__init__( import_name ,template_folder = template_folder,root_path = root_path,static_folder = None)
+        self.config.from_pyfile( 'config/base_setting.py' )
         if "ops_config" in os.environ:
-            self.config.from_pyfile('config/%s_setting.py' % os.environ['ops_config'])
+            self.config.from_pyfile( 'config/%s_setting.py'%os.environ['ops_config'] )
 
-        db.init_app(self)
+        db.init_app( self )
 
 
 db = SQLAlchemy()
-app = Application(__name__, template_folder=os.getcwd() + '/web/templates')
-manager = Manager(app)
+app = Application( __name__ ,template_folder = os.getcwd() + "/web/templates/",root_path = os.getcwd() )
+manager = Manager( app )
 
 """
 函数模板

@@ -140,8 +140,8 @@ var common_ops = {
         }, 100);
     },
     buildUrl:function (path, params) { // 链接管理
-        let url = "" + path;
-        let _paramUrl = "";
+        var url = "" + path;
+        var _paramUrl = "";
         if (params){
             _paramUrl = Object.keys(params).map(function (k) {
                 return [encodeURIComponent(k), encodeURIComponent(params[k])].join("=");
@@ -162,8 +162,7 @@ var common_ops = {
     buildPicUrl:function (img_key) {
         var domain = $(".hidden_layout_wrap input[name=domain]").val();
         var prefix_url = $(".hidden_layout_wrap input[name=prefix_url]").val();
-        // return domain + prefix_url  + img_key;
-        return 'http://0.0.0.0:8999/static/upload/' + img_key
+        return domain + prefix_url  + img_key;
     }
 };
 

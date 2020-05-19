@@ -18,7 +18,7 @@ import uuid
 from flask import jsonify
 from werkzeug.utils import secure_filename
 from common.libs.Helper import getCurrentDate
-from common.models.Images import Image
+from common.models.Image import Image
 from application import app, db
 
 

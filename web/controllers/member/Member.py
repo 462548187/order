@@ -30,68 +30,62 @@ def index():
 
     # 分页
     page_params = {
-        'total': query.count(),
+        'total':query.count(),
         'page_size': app.config['PAGE_SIZE'],
-        'page': page,
-        'display': app.config['PAGE_DISPLAY'],
-        'url': request.full_path.replace('&p={}'.format(page), '')
+        'page':page,
+        'display':app.config['PAGE_DISPLAY'],
+        'url': request.full_path.replace("&p={}".format(page),"")
     }
 
-    pages = iPagination(page_params)
-    offset = (page - 1) * app.config['PAGE_SIZE']
-    member_list = query.order_by(Member.id.desc()).offset(offset).limit(app.config['PAGE_SIZE']).all()
+    pages = iPagination( page_params )
+    offset = ( page - 1 ) * app.config['PAGE_SIZE']
+    list = query.order_by( Member.id.desc() ).offset( offset ).limit( app.config['PAGE_SIZE'] ).all()
 
-    resp_data['list'] = member_list
+    resp_data['list'] = list
     resp_data['pages'] = pages
-
-    resp_data['current'] = index
     resp_data['search_con'] = req
     resp_data['status_mapping'] = app.config['STATUS_MAPPING']
-    return ops_render("member/index.html", resp_data)
+    resp_data['current'] = 'index'
+    return ops_render( "member/index.html",resp_data )
 
 
 @route_member.route("/info")
 def info():
     resp_data = {}
     req = request.args
+    id = int( req.get( "id",0 ) )
+    reback_url = UrlManager.buildUrl( "/member/index" )
+    if id < 1:
+        return redirect( reback_url )
 
-    uid = int(req.get('id', 0))
-    back_url = UrlManager.buildUrl('/member/index')
+    info = Member.query.filter_by( id =id ).first()
+    if not info:
+        return redirect( reback_url )
 
-    if uid < 1:
-        return redirect(back_url)
-
-    member_info = Member.query.filter_by(id=uid).first()
-
-    if not member_info:
-        return redirect(back_url)
-
-    resp_data['member_info'] = member_info
+    resp_data['info'] = info
     resp_data['current'] = 'index'
     return ops_render("member/info.html", resp_data)
 
-
-@route_member.route("/set", methods=['GET', 'POST'])
-def member_set():
-    if request.method == 'GET':
+@route_member.route( "/set",methods = [ "GET","POST" ] )
+def set():
+    if request.method == "GET":
         resp_data = {}
         req = request.args
-        uid = int(req.get('id', 0))
-        back_url = UrlManager.buildUrl('/member/index')
+        id = int( req.get( "id",0 ) )
+        reback_url = UrlManager.buildUrl("/member/index")
+        if id < 1:
+            return redirect(reback_url)
 
-        if uid < 1:
-            return redirect(back_url)
+        info = Member.query.filter_by(id=id).first()
+        if not info:
+            return redirect(reback_url)
 
-        member_info = Member.query.filter_by(id=uid).first()
-        if not member_info:
-            return redirect(back_url)
+        if info.status != 1:  # 如果状态不是1，返回列表
+            return redirect(reback_url)
 
-        if member_info != 1:  # 如果状态不是1，返回列表
-            return redirect(back_url)
-
-        resp_data['member_info'] = member_info
+        resp_data['info'] = info
         resp_data['current'] = 'index'
-        return ops_render('/member/set.html', resp_data)
+        return ops_render("/member/set.html", resp_data)
 
     resp = {'code': 200, 'msg': '操作成功！', 'data': {}}
     req = request.values
@@ -102,7 +96,7 @@ def member_set():
 
     if nickname is None or len(nickname) < 1:  # 判断用户名长度
         resp['code'] = -1
-        resp['msg'] = '请输入符合规范的姓名'
+        resp['msg'] = "请输入符合规范的姓名"
         return jsonify(resp)
 
     if mobile is None or len(mobile) < 11:  # 判断手机长度
@@ -114,7 +108,7 @@ def member_set():
 
     if not member_info:
         resp['code'] = -1
-        resp['msg'] = '指定的会员不存在'
+        resp['msg'] = "指定会员不存在"
         return jsonify(resp)
 
     member_info.nickname = nickname  # 变更用户名
@@ -133,43 +127,40 @@ def comment():
 
 
 # 删除和恢复
-@route_member.route('/ops', methods=['POST'])
+@route_member.route("/ops",methods=["POST"])
 def ops():
-    resq = {'code': '200', 'msg': '操作成功！', 'data': {}}
+    resp = { 'code':200,'msg':'操作成功','data':{} }
     req = request.values
 
-    id = req['id'] if 'id' in req else ''
+    id = req['id'] if 'id' in req else 0
     act = req['act'] if 'act' in req else ''
 
-    if not id:
-        resq['code'] = -1
-        resq['msg'] = '请选择要操作的账号'
-        return jsonify(resq)
+    if not id :
+        resp['code'] = -1
+        resp['msg'] = "请选择要操作的账号"
+        return jsonify(resp)
 
-    if act not in ['remove', 'recover']:
-        resq['code'] = -1
-        resq['msg'] = '操作有误，请重试'
-        return jsonify(resq)
+    if act not in [ 'remove','recover' ]:
+        resp['code'] = -1
+        resp['msg'] = "操作有误，请重试"
+        return jsonify(resp)
 
     # 查询用户信息是否存在
     member_info = Member.query.filter_by(id=id).first()
 
     if not member_info:
-        resq['code'] = -1
-        resq['msg'] = '指定账号不存在'
-        return jsonify(resq)
+        resp['code'] = -1
+        resp['msg'] = "指定会员不存在"
+        return jsonify(resp)
 
-    if act == 'remove':
+    if act == "remove":
         member_info.status = 0
-    elif act == 'recover':
+    elif act == "recover":
         member_info.status = 1
     else:
         return False
 
-    member_info.update_time = getCurrentDate()  # 更新操作时间
+    member_info.updated_time = getCurrentDate()  # 更新操作时间
     db.session.add(member_info)
     db.session.commit()
-
-    return jsonify(resq)
-
-
+    return jsonify( resp )

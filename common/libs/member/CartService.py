@@ -30,7 +30,7 @@ class CartService:
         return True
 
     @staticmethod
-    def setItem(member_id=0, food_id=0, number=0):  # 加入购物车
+    def setItems(member_id=0, food_id=0, number=0):  # 加入购物车
         if member_id < 1 or food_id < 1 or number < 1:
             return False
 
