@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
-from flask import Blueprint, jsonify, redirect, request
+from flask import Blueprint, request, redirect, jsonify
 from sqlalchemy import or_
 
-from common.libs.Helper import getCurrentDate, ops_render, iPagination
+from common.libs.Helper import ops_render, iPagination, getCurrentDate, getDictFilterField, selectFilterObj
 from common.libs.UrlManager import UrlManager
-from common.models.log.AppAccessLog import AppAccessLog
 from common.models.member.Member import Member
+from common.models.member.MemberComments import MemberComments
+from common.models.food.Food import Food
+from common.models.pay.PayOrder import PayOrder
 from application import app, db
 
 route_member = Blueprint('member_page', __name__)
@@ -30,48 +32,55 @@ def index():
 
     # 分页
     page_params = {
-        'total':query.count(),
+        'total': query.count(),
         'page_size': app.config['PAGE_SIZE'],
-        'page':page,
-        'display':app.config['PAGE_DISPLAY'],
-        'url': request.full_path.replace("&p={}".format(page),"")
+        'page': page,
+        'display': app.config['PAGE_DISPLAY'],
+        'url': request.full_path.replace("&p={}".format(page), "")
     }
 
-    pages = iPagination( page_params )
-    offset = ( page - 1 ) * app.config['PAGE_SIZE']
-    list = query.order_by( Member.id.desc() ).offset( offset ).limit( app.config['PAGE_SIZE'] ).all()
+    pages = iPagination(page_params)
+    offset = (page - 1) * app.config['PAGE_SIZE']
+    list = query.order_by(Member.id.desc()).offset(offset).limit(app.config['PAGE_SIZE']).all()
 
     resp_data['list'] = list
     resp_data['pages'] = pages
     resp_data['search_con'] = req
     resp_data['status_mapping'] = app.config['STATUS_MAPPING']
     resp_data['current'] = 'index'
-    return ops_render( "member/index.html",resp_data )
+    return ops_render("member/index.html", resp_data)
 
 
 @route_member.route("/info")
 def info():
     resp_data = {}
     req = request.args
-    id = int( req.get( "id",0 ) )
-    reback_url = UrlManager.buildUrl( "/member/index" )
+    id = int(req.get("id", 0))
+    reback_url = UrlManager.buildUrl("/member/index")
     if id < 1:
-        return redirect( reback_url )
+        return redirect(reback_url)
 
-    info = Member.query.filter_by( id =id ).first()
+    info = Member.query.filter_by(id=id).first()
     if not info:
-        return redirect( reback_url )
+        return redirect(reback_url)
+
+    pay_order_list = PayOrder.query.filter_by(member_id=id).filter(PayOrder.status.in_([-8, 1])) \
+        .order_by(PayOrder.id.desc()).all()
+    comment_list = MemberComments.query.filter_by(member_id=id).order_by(MemberComments.id.desc()).all()
 
     resp_data['info'] = info
+    resp_data['pay_order_list'] = pay_order_list
+    resp_data['comment_list'] = comment_list
     resp_data['current'] = 'index'
     return ops_render("member/info.html", resp_data)
 
-@route_member.route( "/set",methods = [ "GET","POST" ] )
+
+@route_member.route("/set", methods=["GET", "POST"])
 def set():
     if request.method == "GET":
         resp_data = {}
         req = request.args
-        id = int( req.get( "id",0 ) )
+        id = int(req.get("id", 0))
         reback_url = UrlManager.buildUrl("/member/index")
         if id < 1:
             return redirect(reback_url)
@@ -123,24 +132,73 @@ def set():
 
 @route_member.route("/comment")
 def comment():
-    return ops_render("member/comment.html")
+    resp_data = {}
+    req = request.args
+    page = int(req['p']) if ('p' in req and req['p']) else 1
+    query = MemberComments.query
+
+    page_params = {
+        'total': query.count(),
+        'page_size': app.config['PAGE_SIZE'],
+        'page': page,
+        'display': app.config['PAGE_DISPLAY'],
+        'url': request.full_path.replace("&p={}".format(page), "")
+    }
+
+    pages = iPagination(page_params)
+    offset = (page - 1) * app.config['PAGE_SIZE']
+
+    comment_list = query.order_by(MemberComments.id.desc()).offset(offset).limit(app.config['PAGE_SIZE']).all()
+    data_list = []
+    if comment_list:
+        member_map = getDictFilterField(Member, Member.id, "id", selectFilterObj(comment_list, "member_id"))
+        food_ids = []
+        for item in comment_list:
+            tmp_food_ids = (item.food_ids[1:-1]).split("_")
+            tmp_food_ids = {}.fromkeys(tmp_food_ids).keys()
+            food_ids = food_ids + list(tmp_food_ids)
+
+        food_map = getDictFilterField(Food, Food.id, "id", food_ids)
+
+        for item in comment_list:
+            tmp_member_info = member_map[item.member_id]
+            tmp_foods = []
+            tmp_food_ids = (item.food_ids[1:-1]).split("_")
+            for tmp_food_id in tmp_food_ids:
+                tmp_food_info = food_map[int(tmp_food_id)]
+                tmp_foods.append({
+                    'name': tmp_food_info.name,
+                })
+
+            tmp_data = {
+                "content": item.content,
+                "score": item.score,
+                "member_info": tmp_member_info,
+                "foods": tmp_foods
+            }
+            data_list.append(tmp_data)
+    resp_data['list'] = data_list
+    resp_data['pages'] = pages
+    resp_data['current'] = 'comment'
+
+    return ops_render("member/comment.html", resp_data)
 
 
 # 删除和恢复
-@route_member.route("/ops",methods=["POST"])
+@route_member.route("/ops", methods=["POST"])
 def ops():
-    resp = { 'code':200,'msg':'操作成功','data':{} }
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
 
     id = req['id'] if 'id' in req else 0
     act = req['act'] if 'act' in req else ''
 
-    if not id :
+    if not id:
         resp['code'] = -1
         resp['msg'] = "请选择要操作的账号"
         return jsonify(resp)
 
-    if act not in [ 'remove','recover' ]:
+    if act not in ['remove', 'recover']:
         resp['code'] = -1
         resp['msg'] = "操作有误，请重试"
         return jsonify(resp)
@@ -163,4 +221,4 @@ def ops():
     member_info.updated_time = getCurrentDate()  # 更新操作时间
     db.session.add(member_info)
     db.session.commit()
-    return jsonify( resp )
+    return jsonify(resp)

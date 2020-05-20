@@ -179,7 +179,7 @@ def cat():
     if 'status' in req and int(req['status']) > -1:
         query = query.filter(FoodCat.status == int(req['status']))
 
-    list = query.order_by( FoodCat.weight.desc(),FoodCat.id.desc() ).all()
+    list = query.order_by(FoodCat.weight.desc(), FoodCat.id.desc()).all()
     resp_data['list'] = list
     resp_data['search_con'] = req
     resp_data['status_mapping'] = app.config['STATUS_MAPPING']
@@ -187,7 +187,8 @@ def cat():
 
     return ops_render("food/cat.html", resp_data)
 
-@route_food.route( "/cat-set",methods = [ "GET","POST" ] )
+
+@route_food.route("/cat-set", methods=["GET", "POST"])
 def catSet():
     if request.method == "GET":
         resp_data = {}
@@ -195,7 +196,7 @@ def catSet():
         id = int(req.get("id", 0))
         info = None
         if id:
-            info = FoodCat.query.filter_by( id = id ).first()
+            info = FoodCat.query.filter_by(id=id).first()
         resp_data['info'] = info
         resp_data['current'] = 'cat'
 
@@ -208,7 +209,7 @@ def catSet():
     name = req['name'] if 'name' in req else ''
     weight = int(req['weight']) if ('weight' in req and int(req['weight']) > 0) else 1
 
-    food_cat_info = FoodCat.query.filter_by(id=set_id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
+    food_cat_info = FoodCat.query.filter_by(id=id).first()  # 获取uid，判断是否存在，存在是更新，否则就新增
 
     if name is None or len(name) < 1:  # 判断用户名长度
         resp['code'] = -1
@@ -234,24 +235,25 @@ def catSet():
 
     return jsonify(resp)  # 更改成功
 
-@route_food.route("/cat-ops",methods = [ "POST" ])
+
+@route_food.route("/cat-ops", methods=["POST"])
 def catOps():
     resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
 
     id = req['id'] if 'id' in req else 0
     act = req['act'] if 'act' in req else ''
-    if not id :
+    if not id:
         resp['code'] = -1
         resp['msg'] = "请选择要操作的账号"
         return jsonify(resp)
 
-    if  act not in [ 'remove','recover' ] :
+    if act not in ['remove', 'recover']:
         resp['code'] = -1
         resp['msg'] = "操作有误，请重试"
         return jsonify(resp)
 
-    food_cat_info = FoodCat.query.filter_by( id= id ).first()
+    food_cat_info = FoodCat.query.filter_by(id=id).first()
     if not food_cat_info:
         resp['code'] = -1
         resp['msg'] = "指定分类不存在"
@@ -263,24 +265,25 @@ def catOps():
         food_cat_info.status = 1
 
         food_cat_info.update_time = getCurrentDate()
-    db.session.add( food_cat_info )
+    db.session.add(food_cat_info)
     db.session.commit()
     return jsonify(resp)
 
-@route_food.route("/ops",methods=["POST"])
+
+@route_food.route("/ops", methods=["POST"])
 def ops():
-    resp = { 'code':200,'msg':'操作成功','data':{} }
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
     req = request.values
 
     id = req['id'] if 'id' in req else 0
     act = req['act'] if 'act' in req else ''
 
-    if not id :
+    if not id:
         resp['code'] = -1
         resp['msg'] = "请选择要操作的账号~~"
         return jsonify(resp)
 
-    if act not in [ 'remove','recover' ]:
+    if act not in ['remove', 'recover']:
         resp['code'] = -1
         resp['msg'] = "操作有误，请重试~~"
         return jsonify(resp)
@@ -303,5 +306,4 @@ def ops():
     food_info.updated_time = getCurrentDate()  # 更新操作时间
     db.session.add(food_info)
     db.session.commit()
-    return jsonify( resp )
-
+    return jsonify(resp)

@@ -46,22 +46,22 @@ def myAddressSet():
 
     if not nickname:
         resp['code'] = -1
-        resp['msg'] = "请填写联系人姓名~~"
+        resp['msg'] = "请填写联系人姓名"
         return jsonify(resp)
 
     if not mobile:
         resp['code'] = -1
-        resp['msg'] = "请填写手机号码~~"
+        resp['msg'] = "请填写手机号码"
         return jsonify(resp)
 
     if province_id < 1:
         resp['code'] = -1
-        resp['msg'] = "请选择地区~~"
+        resp['msg'] = "请选择地区"
         return jsonify(resp)
 
     if city_id < 1:
         resp['code'] = -1
-        resp['msg'] = "请选择地区~~"
+        resp['msg'] = "请选择地区"
         return jsonify(resp)
 
     if district_id < 1:
@@ -69,12 +69,12 @@ def myAddressSet():
 
     if not address:
         resp['code'] = -1
-        resp['msg'] = "请填写详细地址~~"
+        resp['msg'] = "请填写详细地址"
         return jsonify(resp)
 
     if not member_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙，请稍后再试~~"
+        resp['msg'] = "系统繁忙，请稍后再试"
         return jsonify(resp)
 
     address_info = MemberAddress.query.filter_by(id=id, member_id=member_info.id).first()
@@ -111,13 +111,13 @@ def myAddressInfo():
 
     if id < 1 or not member_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙，请稍后再试~~"
+        resp['msg'] = "系统繁忙，请稍后再试"
         return jsonify(resp)
 
     address_info = MemberAddress.query.filter_by(id=id).first()
     if not address_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙，请稍后再试~~"
+        resp['msg'] = "系统繁忙，请稍后再试"
         return jsonify(resp)
 
     resp['data']['info'] = {
@@ -144,13 +144,13 @@ def myAddressOps():
 
     if id < 1 or not member_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙，请稍后再试~~"
+        resp['msg'] = "系统繁忙，请稍后再试"
         return jsonify(resp)
 
     address_info = MemberAddress.query.filter_by(id=id, member_id=member_info.id).first()
     if not address_info:
         resp['code'] = -1
-        resp['msg'] = "系统繁忙，请稍后再试~~"
+        resp['msg'] = "系统繁忙，请稍后再试"
         return jsonify(resp)
 
     if act == "del":
@@ -159,8 +159,7 @@ def myAddressOps():
         db.session.add(address_info)
         db.session.commit()
     elif act == "default":
-        MemberAddress.query.filter_by(member_id=member_info.id) \
-            .update({'is_default': 0})
+        MemberAddress.query.filter_by(member_id=member_info.id).update({'is_default': 0})
         address_info.is_default = 1
         address_info.updated_time = getCurrentDate()
         db.session.add(address_info)

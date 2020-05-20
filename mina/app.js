@@ -6,7 +6,7 @@ App({
         userInfo: null,
         version: "1.0",
         shopName: "Python3 + Flask 订餐全栈系统",
-        domain:"http://10.67.13.95:8999/api"
+        domain:"http://0.0.0.0:8999/api"
     },
     tip:function( params ){
         var that = this;
