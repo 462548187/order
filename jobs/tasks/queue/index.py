@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
+import datetime
+import json
+import requests
+
+from sqlalchemy import func
+
 from application import app, db
-from common.models.queue.QueueList import QueueList
-import json, requests, datetime
 from common.libs.Helper import getCurrentDate
 from common.libs.pay.WeChatService import WeChatService
-from common.models.pay.PayOrder import PayOrder
-from common.models.pay.PayOrderItem import PayOrderItem
-from common.models.member.OauthMemberBind import OauthMemberBind
 from common.models.food.Food import Food
 from common.models.food.FoodSaleChangeLog import FoodSaleChangeLog
-from sqlalchemy import func
+from common.models.member.OauthMemberBind import OauthMemberBind
+from common.models.pay.PayOrder import PayOrder
+from common.models.pay.PayOrderItem import PayOrderItem
+from common.models.queue.QueueList import QueueList
 
 '''
 python manager.py runjob -m queue/index
