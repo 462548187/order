@@ -8,24 +8,26 @@ Page({
         yun_price: "0.00",
         pay_price: "0.00",
         total_price: "0.00",
-        params: null
-    },
-    onShow: function () {
-        var that = this;
-        this.getOrderInfo();
+        params: null,
+        express_address_id:0
     },
     onLoad: function (e) {
         var that = this;
         that.setData({
-            params:JSON.parse(e.data)
-        })
+            params: JSON.parse(e.data)
+        });
+    },
+    onShow: function () {
+        var that = this;
+         this.getOrderInfo();
     },
     createOrder: function (e) {
         wx.showLoading();
         var that = this;
         var data = {
-            type:this.data.params.type,
-            goods:JSON.stringify(this.data.params.goods)
+            type: this.data.params.type,
+            goods: JSON.stringify(this.data.params.goods),
+            express_address_id: that.data.default_address.id
         };
         wx.request({
             url:app.buildUrl("/order/create"),
@@ -47,7 +49,7 @@ Page({
     },
     addressSet: function () {
         wx.navigateTo({
-            url: "/pages/my/addressSet"
+            url: "/pages/my/addressSet?id=0"
         });
     },
     selectAddress: function () {
@@ -73,15 +75,18 @@ Page({
                     return;
                 }
                 that.setData({
-                    goods_list:resp.data.food_list,
-                    default_address:resp.data.default_address,
-                    yun_price:resp.data.yun_price,
-                    pay_price:resp.data.pay_price,
-                    total_price:resp.data.total_price,
-
-
+                    goods_list: resp.data.food_list,
+                    default_address: resp.data.default_address,
+                    yun_price: resp.data.yun_price,
+                    pay_price: resp.data.pay_price,
+                    total_price: resp.data.total_price,
                 });
 
+                if( that.data.default_address ){
+                    that.setData({
+                         express_address_id: that.data.default_address.id
+                    });
+                }
             }
         });
     }

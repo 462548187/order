@@ -4,7 +4,6 @@ from sqlalchemy.schema import FetchedValue
 from application import db
 
 
-
 class OauthMemberBind(db.Model):
     __tablename__ = 'oauth_member_bind'
     __table_args__ = (

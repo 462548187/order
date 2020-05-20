@@ -12,6 +12,7 @@
 """
 import decimal
 import hashlib
+import json
 import random
 import time
 from random import randint
@@ -31,7 +32,7 @@ class PayService:
     def __init__(self):
         pass
 
-    def createOder(self, member_id, items=None, params=None):
+    def createOrder(self, member_id, items=None, params=None):
         resp = {'code': 200, 'msg': '提交成功', 'data': {}}
 
         pay_price = decimal.Decimal(0.00)
@@ -52,7 +53,8 @@ class PayService:
 
         yun_price = params['yun_price'] if params and 'yun_price' in params else 0
         note = params['note'] if params and 'note' in params else ''
-
+        express_address_id = params['express_address_id'] if params and 'express_address_id' in params else 0
+        express_info = params['express_info'] if params and 'express_info' in params else {}
         yun_price = decimal.Decimal(yun_price)
         total_price = pay_price + yun_price
 
@@ -72,6 +74,8 @@ class PayService:
             model_pay_order.note = note
             model_pay_order.status = -8
             model_pay_order.express_status = -8
+            model_pay_order.express_address_id = express_address_id
+            model_pay_order.express_info = json.dumps(  express_info )
             model_pay_order.updated_time = model_pay_order.created_time = getCurrentDate()
             db.session.add(model_pay_order)
 

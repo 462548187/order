@@ -37,6 +37,5 @@
                 <view class="btn topay-btn" bindtap="orderComment" data-id="{{item.order_sn}}" wx:if="{{item.status==-5}}">走，去评价</view>
             </view>
         </view>
-
     </view>
 </view>
