@@ -63,7 +63,7 @@ def foodSearch():
     req = request.values
     cat_id = int(req['cat_id']) if 'cat_id' in req else 0
     mix_kw = str(req['mix_kw']) if 'mix_kw' in req else ''
-    p = int(req['p']) if 'p' in req else 0
+    p = int( req['p'] ) if 'p' in req else 1
 
     query = Food.query.filter_by(status=1)  # 只查询状态为正常的数据
 
@@ -84,9 +84,9 @@ def foodSearch():
         for item in food_list:
             tmp_data = {
                 'id': item.id,
-                'name': item.name,
-                'price': str(item.price),
-                'min_price': str(item.price),
+                'name': "%s"%( item.name ),
+                'price': str( item.price ),
+                'min_price':str( item.price ),
                 'pic_url': UrlManager.buildImageUrl(item.main_image)
             }
             data_food_list.append(tmp_data)
@@ -114,17 +114,17 @@ def foodInfo():
         cart_number = MemberCart.query.filter_by(member_id=member_info.id).count()
 
     resp['data']['info'] = {
-        'id': food_info.id,
-        'name': food_info.name,
-        'summary': food_info.summary,
-        'total_count': food_info.total_count,
-        'comment_count': food_info.comment_count,
-        'main_image': UrlManager.buildImageUrl(food_info.main_image),
-        'price': str(food_info.price),
-        'stock': food_info.stock,
-        'pics': [UrlManager.buildImageUrl(food_info.main_image)]
+        "id":food_info.id,
+        "name":food_info.name,
+        "summary":food_info.summary,
+        "total_count":food_info.total_count,
+        "comment_count":food_info.comment_count,
+        'main_image':UrlManager.buildImageUrl( food_info.main_image ),
+        "price":str( food_info.price ),
+        "stock":food_info.stock,
+        "pics":[ UrlManager.buildImageUrl( food_info.main_image ) ]
     }
-
     resp['data']['cart_number'] = cart_number
+    return jsonify(resp)
 
     return jsonify(resp)

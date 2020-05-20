@@ -137,5 +137,6 @@ def memberShare():
 
     db.session.add(model_share)
     db.session.commit()
+    return jsonify(resp)
 
     return jsonify(resp)

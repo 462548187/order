@@ -4,7 +4,7 @@
 @Author         :  Liu Yue
 @Version        :  
 ------------------------------------
-@File           :  cart.py
+@File           :  Cart.py
 @Description    :  
 @CreateTime     :  2020/5/18 4:28 下午
 ------------------------------------
@@ -24,7 +24,7 @@ from common.libs.Helper import selectFilterObj, getDictFilterField
 
 @route_api.route("/cart/index")
 def cartIndex():
-    resp = {'code': 200, 'msg': '编辑成功', 'data': {}}
+    resp = {'code': 200, 'msg': '添加购物车成功~', 'data': {}}
     member_info = g.member_info
     if not member_info:
         resp['code'] = -1
@@ -40,13 +40,13 @@ def cartIndex():
         for item in cart_list:
             tmp_food_info = food_map[item.food_id]
             tmp_data = {
-                "id": item.id,
+                "id":item.id,
+                "number":item.quantity,
                 "food_id": item.food_id,
-                "number": item.quantity,
-                "name": tmp_food_info.name,
-                "price": str(tmp_food_info.price),
-                "pic_url": UrlManager.buildImageUrl(tmp_food_info.main_image),
-                "active": True
+                "name":tmp_food_info.name,
+                "price":str( tmp_food_info.price ),
+                "pic_url": UrlManager.buildImageUrl( tmp_food_info.main_image ),
+                "active":True
             }
             data_cart_list.append(tmp_data)
     resp['data']['list'] = data_cart_list
@@ -55,7 +55,7 @@ def cartIndex():
 
 @route_api.route('/cart/set', methods=['POST'])
 def setCart():
-    resp = {'code': 200, 'msg': '添加成功', 'data': {}}
+    resp = {'code': 200, 'msg': '添加购物车成功~', 'data': {}}
     req = request.values
     food_id = int(req['id']) if 'id' in req else 0
     number = int(req['number']) if 'number' in req else 0
@@ -93,7 +93,7 @@ def setCart():
 
 @route_api.route('/cart/del', methods=['POST'])
 def delCart():
-    resp = {'code': 200, 'msg': '添加成功', 'data': {}}
+    resp = {'code': 200, 'msg': '添加购物车成功~', 'data': {}}
     req = request.values
     params_goods = req['goods'] if 'goods' in req else None
 

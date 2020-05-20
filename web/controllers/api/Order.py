@@ -4,7 +4,7 @@
 @Author         :  Liu Yue
 @Version        :  
 ------------------------------------
-@File           :  cart.py
+@File           :  Cart.py
 @Description    :  
 @CreateTime     :  2020/5/18 4:28 下午
 ------------------------------------
@@ -15,6 +15,7 @@ import json
 
 from flask import g, jsonify, request
 from application import app, db
+from common.libs.Helper import getCurrentDate
 from common.libs.UrlManager import UrlManager
 from common.libs.member.CartService import CartService
 from common.libs.pay.PayService import PayService
@@ -170,16 +171,15 @@ def orderCallBack():
         result_data['return_code'] = result_data['return_msg'] = "FALL"
         return target_wechat.dict_to_xml(result_data), header
 
-    order_sn = callback_data['out_trade_no']
-    pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
+        order_sn = callback_data['out_trade_no']
+        pay_order_info = PayOrder.query.filter_by(order_sn=order_sn).first()
+        if not pay_order_info:
+            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+            return target_wechat.dict_to_xml(result_data), header
 
-    if not pay_order_info:
-        result_data['return_code'] = result_data['return_msg'] = "FALL"
-        return target_wechat.dict_to_xml(result_data), header
-
-    if int(pay_order_info.total_price * 100) != int(callback_data['total_price']):
-        result_data['return_code'] = result_data['return_msg'] = "FALL"
-        return target_wechat.dict_to_xml(result_data), header
+        if int(pay_order_info.total_price * 100) != int(callback_data['total_price']):
+            result_data['return_code'] = result_data['return_msg'] = 'FAIL'
+            return target_wechat.dict_to_xml(result_data), header
 
     if pay_order_info.status == 1:
         return target_wechat.dict_to_xml(result_data), header
@@ -191,3 +191,32 @@ def orderCallBack():
     target_pay.addPayCallbackData(pay_order_id=pay_order_info.id, data=request.data)
 
     return target_wechat.dict_to_xml(result_data), header
+
+
+@route_api.route("/order/ops", methods=["POST"])
+def orderOps():
+    resp = {'code': 200, 'msg': '操作成功', 'data': {}}
+    req = request.values
+    member_info = g.member_info
+    order_sn = req['order_sn'] if 'order_sn' in req else ''
+    act = req['act'] if 'act' in req else ''
+    pay_order_info = PayOrder.query.filter_by(order_sn=order_sn, member_id=member_info.id).first()
+    if not pay_order_info:
+        resp['code'] = -1
+        resp['msg'] = "系统繁忙，请稍后再试"
+        return jsonify(resp)
+
+    if act == "cancel":
+        target_pay = PayService()
+        ret = target_pay.closeOrder(pay_order_id=pay_order_info.id)
+        if not ret:
+            resp['code'] = -1
+            resp['msg'] = "系统繁忙，请稍后再试"
+            return jsonify(resp)
+    elif act == "confirm":
+        pay_order_info.express_status = 1
+        pay_order_info.updated_time = getCurrentDate()
+        db.session.add(pay_order_info)
+        db.session.commit()
+
+    return jsonify(resp)

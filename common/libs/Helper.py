@@ -86,7 +86,14 @@ def getCurrentDate(format="%Y-%m-%d %H:%M:%S"):
     return datetime.datetime.now().strftime(format)
     # return datetime.datetime.now()
 
+"""
+获取格式化的时间
+"""
+def getFormatDate( date = None ,format = "%Y-%m-%d %H:%M:%S" ):
+    if date is None:
+        date = datetime.datetime.now()
 
+    return date.strftime( format )
 """
 根据某个字段获取一个字典出来
 """
